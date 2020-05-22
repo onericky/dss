@@ -13,3 +13,11 @@
  *= require_tree .
  *= require_self
  */
+
+.card-dss-w {
+    height: 150px !important;
+}
+
+.card-dss-title-w {
+    padding-bottom: 5px !important;
+}
