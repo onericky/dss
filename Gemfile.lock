@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/rails-sqlserver/activerecord-sqlserver-adapter.git
+  revision: f5861b72594862f682689d677722354238bc9029
+  specs:
+    activerecord-sqlserver-adapter (6.0.0.rc2)
+      activerecord (~> 6.0.0)
+      tiny_tds
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -167,10 +175,10 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    sqlite3 (1.4.2)
     thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
+    tiny_tds (2.1.2)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -200,6 +208,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-sqlserver-adapter!
   bootsnap (>= 1.4.2)
   byebug
   capybara (>= 2.15)
@@ -211,7 +220,7 @@ DEPENDENCIES
   selenium-webdriver
   spring
   spring-watcher-listen (~> 2.0.0)
-  sqlite3 (~> 1.4)
+  tiny_tds (~> 2.1.2)
   turbolinks (~> 5)
   tzinfo-data
   web-console (>= 3.3.0)
