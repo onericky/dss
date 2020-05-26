@@ -21,3 +21,29 @@
 .card-dss-title-w {
     padding-bottom: 5px !important;
 }
+
+.nav-main {
+    float: right !important;
+}
+
+.nav-wrapper {
+
+}
+
+.sidenav {
+    transform: translateX(0%) !important;
+}
+
+.collapsible-body {
+    /*padding: 1rem !important;*/
+}
+
+.logo {
+    width: 70px;
+    height: 70px;
+}
+
+.circle {
+    width: 100px !important;
+    height: 100px !important;
+}
