@@ -22,12 +22,27 @@
             M.Range.init(elems);
 
             var elemsn = document.querySelectorAll('.sidenav');
-            var instances = M.Sidenav.init(elemsn, []);
+            var sidenav = M.Sidenav.init(elemsn, []);
 
             var elems2 = document.querySelectorAll('.collapsible');
-            var instances = M.Collapsible.init(elems2, []);
+            var collapsible = M.Collapsible.init(elems2, []);
+
+            var date = new Date();
+            var elems3 = document.querySelectorAll('.datepicker');
+            var picker = M.Datepicker.init(elems3, {'disableDayFn': function(date) {
+                    if(date.getDay() == 0)
+                        return false;
+                    else
+                        return true;
+                }});
         };
     </script>
+<!--    <script src="https://code.highcharts.com/highcharts.js"></script>-->
+<!--    <script src="https://code.highcharts.com/modules/exporting.js"></script>-->
+<!--    <script src="https://code.highcharts.com/modules/export-data.js"></script>-->
+<!--    <script src="https://code.highcharts.com/modules/accessibility.js"></script>-->
+    <script src="http://code.highcharts.com/stock/highstock.js"></script>
+
   </head>
 
   <body>
@@ -64,6 +79,22 @@
           </li>
 
           <li>
+
+<!--            <ul class="collapsible">-->
+<!--              <li>-->
+<!--                <div class="collapsible-header waves-effect waves-purple light-blue darken-4"><i class="material-icons icon-white">date_range</i></div>-->
+<!--                <div class="collapsible-body">-->
+<!--                  <div class="col m12">-->
+<!--                    <div class="input-field">-->
+<!--                      <input type="text" class="datepicker">-->
+<!--                      <label for="bike_cost">Date</label>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </li>-->
+<!--            </ul>-->
+
+            <div class="col m12 divider"></div>
             <ul class="collapsible">
               <li>
                 <div class="collapsible-header waves-effect waves-purple light-blue darken-4"><i class="material-icons icon-white">Z</i></div>
@@ -76,7 +107,7 @@
                       </h6>
                     </div>
                     <div>
-                      <select class="browser-default">
+                      <select id="z1-dss" class="browser-default">
                         <option value="" disabled selected>Choose your option</option>
                         <option value="1">Low</option>
                         <option value="2">Regular</option>
@@ -93,7 +124,7 @@
                       </h6>
                     </div>
                     <div>
-                      <select class="browser-default">
+                      <select id="z2-dss" class="browser-default">
                         <option value="" disabled selected>Choose your option</option>
                         <option value="1">Low</option>
                         <option value="2">Regular</option>
@@ -113,7 +144,7 @@
                       <div class="switch">
                         <label>
                           <span class="red-text">Off</span>
-                          <input type="checkbox">
+                          <input id="z3-dss" type="checkbox">
                           <span class="lever"></span>
                           <span class="blue-text">On</span>
                         </label>
@@ -263,10 +294,11 @@
                     </div>
                   </div>
                   <div class="col m12 divider"></div>
-                  <div class="col m12">
+                  <div class="col m12 last-collapsible">
                     <div class="collapsible-body-header deep-purple lighten-5">
                       <h6>
-                        <i class="material-icons">airport_shuttle</i>
+                        <i class="material-icons">commute</i>
+<!--                        <i class="material-icons">airport_shuttle</i>-->
                         W4 QUANTITY OF VEHICLES
                       </h6>
                     </div>
@@ -288,11 +320,10 @@
                 </div>
               </li>
             </ul>
+
           </li>
 
-<!--          <li><div class="divider"></div></li>-->
-<!--          <li><a class="subheader">Subheader</a></li>-->
-<!--          <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>-->
+          <li><div class="divider"></div></li>
         </ul>
       </div>
       <div class="col s10 m10">

@@ -55,3 +55,5 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'tiny_tds', "~> 2.1.2"
 gem 'activerecord-sqlserver-adapter', :git => "https://github.com/rails-sqlserver/activerecord-sqlserver-adapter.git"
+
+gem 'daru-view', :git => 'https://github.com/SciRuby/daru-view'
