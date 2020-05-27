@@ -39,21 +39,19 @@
             <a href="#" class="brand-logo right"><img class="logo" src="/assets/logo.png"></a>
             <ul id="nav-mobile" class="left hide-on-med-and-down">
               <li><a href="#" data-activates="mobile-demo" class="button-collapse show-on-large sidenav-trigger" data-target="slide-out"><i class="material-icons">menu</i></a></li>
-              <li><a href="sass.html">DSS</a></li>
-              <li><a href="badges.html">IES</a></li>
-              <li><a href="collapsible.html">About us</a></li>
+              <li><a href="/dashboard/index">DSS</a></li>
+              <li><a href="/dashboard/ies">IES</a></li>
+              <li><a href="#">About us</a></li>
             </ul>
           </div>
         </nav>
       </div>
     </div>
 
-
     <div class="row">
       <div class="col s2 m2">
         <!--    SIDENAV    -->
         <ul id="slide-out" class="sidenav">
-<!--          <ul>-->
           <li>
             <div class="user-view">
             <div class="background">
@@ -64,17 +62,18 @@
             <a href="#"><span class="white-text email">Universidad Aut&oacute;noma de Aguascalientes</span></a>
           </div>
           </li>
-<!--          </ul>-->
-
 
           <li>
             <ul class="collapsible">
               <li>
-                <div class="collapsible-header waves-effect waves-purple"><i class="material-icons">Z</i>Z</div>
+                <div class="collapsible-header waves-effect waves-purple light-blue darken-4"><i class="material-icons icon-white">Z</i></div>
                 <div class="collapsible-body">
                   <div class="col m12">
-                    <div>
-                      <h6>Z1 RISK</h6>
+                    <div class="collapsible-body-header deep-purple lighten-5">
+                      <h6>
+                        <i class="material-icons">healing</i>
+                        Z1 RISK
+                      </h6>
                     </div>
                     <div>
                       <select class="browser-default">
@@ -87,8 +86,11 @@
                   </div>
                   <div class="col m12 divider"></div>
                   <div class="col m12">
-                    <div>
-                      <h6>Z2 TRAFFIC</h6>
+                    <div class="collapsible-body-header deep-purple lighten-5">
+                      <h6>
+                        <i class="material-icons">traffic</i>
+                        Z2 TRAFFIC
+                      </h6>
                     </div>
                     <div>
                       <select class="browser-default">
@@ -101,8 +103,11 @@
                   </div>
                   <div class="col m12 divider"></div>
                   <div class="col m12">
-                    <div>
-                      <h6>Z3 WEATHER SEASON</h6>
+                    <div class="collapsible-body-header deep-purple lighten-5">
+                      <h6>
+                        <i class="material-icons">cloud_circle</i>
+                        Z3 WEATHER SEASON
+                      </h6>
                     </div>
                     <div>
                       <div class="switch">
@@ -119,26 +124,175 @@
               </li>
             </ul>
 
+            <div class="col m12 divider"></div>
             <ul class="collapsible">
               <li>
-                <div class="collapsible-header waves-effect waves-purple"><i class="material-icons">place</i>Second</div>
-                <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                <div class="collapsible-header waves-effect waves-purple light-blue darken-4"><i class="material-icons icon-white">X</i></div>
+                <div class="collapsible-body">
+                  <div class="col m12">
+                    <div class="collapsible-body-header deep-purple lighten-5">
+                      <h6>
+                        <i class="material-icons">location_on</i>
+                        X1 ACTIVE DELIVERY METHOD
+                      </h6>
+                    </div>
+                    <div>
+                      <p>
+                        <label>
+                          <input type="checkbox" class="filled-in" />
+                          <span class="black-text"><i class="material-icons">directions_bike</i> Bike</span>
+                        </label>
+                      </p>
+                      <p>
+                        <label>
+                          <input type="checkbox" class="filled-in" />
+                          <span class="black-text"><i class="material-icons">motorcycle</i> Motorbike</span>
+                        </label>
+                      </p>
+                      <p>
+                        <label>
+                          <input type="checkbox" class="filled-in" />
+                          <span class="black-text"><i class="material-icons">directions_car</i> Car</span>
+                        </label>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col m12 divider"></div>
+                  <div class="col m12">
+                    <div class="collapsible-body-header deep-purple lighten-5">
+                      <h6>
+                        <i class="material-icons">attach_money</i>
+                        X2 DISCOUNTS
+                      </h6>
+                    </div>
+                    <div>
+                      <p class="range-field">
+                        <input type="range" id="test5" min="0" max="100" />
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </li>
             </ul>
 
+            <div class="col m12 divider"></div>
             <ul class="collapsible">
               <li>
-                <div class="collapsible-header waves-effect waves-purple"><i class="material-icons">whatshot</i>Third</div>
-                <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                <div class="collapsible-header waves-effect waves-purple light-blue darken-4"><i class="material-icons icon-white">W</i></div>
+                <div class="collapsible-body">
+                  <div class="col m12">
+                    <div class="collapsible-body-header deep-purple lighten-5">
+                      <h6>
+                        <i class="material-icons">monetization_on</i>
+                        W1 COST PER DELIVERY BY METHOD
+                      </h6>
+                    </div>
+                    <div>
+                      <div class="input-field">
+                        <input placeholder="Bike cost" id="bike_cost" type="number" class="validate">
+                        <label for="bike_cost">Bike cost</label>
+                      </div>
+                      <div class="input-field">
+                        <input placeholder="Motorbike cost" id="motorbike_cost" type="number" class="validate">
+                        <label for="motorbike_cost">Motorbike cost</label>
+                      </div>
+                      <div class="input-field">
+                        <input placeholder="Car cost" id="car_cost" type="number" class="validate">
+                        <label for="car_cost">Car cost</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col m12 divider"></div>
+                  <div class="col m12">
+                    <div class="collapsible-body-header deep-purple lighten-5">
+                      <h6>
+                        <i class="material-icons">assessment</i>
+                        W2 OPERATING EXPENSES
+                      </h6>
+                    </div>
+                    <div>
+                      <div class="input-field">
+                        <input placeholder="Payroll" id="payroll" type="number" class="validate">
+                        <label for="payroll">Payroll</label>
+                      </div>
+                      <div class="input-field">
+                        <input placeholder="Infrastructure" id="infrastructure" type="number" class="validate">
+                        <label for="infrastructure">Infrastructure</label>
+                      </div>
+                      <div class="input-field">
+                        <input placeholder="Marketing" id="marketing" type="number" class="validate">
+                        <label for="marketing">Marketing</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col m12 divider"></div>
+                  <div class="col m12">
+                    <div class="collapsible-body-header deep-purple lighten-5">
+                      <h6>
+                        <i class="material-icons">assignment</i>
+                        W3 ORDERS
+                      </h6>
+                    </div>
+                    <div>
+                      <table>
+                        <thead>
+                        <tr>
+                          <th class="center-align"><span class="black-text">Zone</span></th>
+                          <th class="center-align"><span class="black-text">Quick</span></th>
+                          <th class="center-align"><span class="black-text">Standard</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                          <td class="center-align"><span class="black-text">A</span></td>
+                          <td><input id="quick-A" type="number" class="validate"></td>
+                          <td><input id="standard-A" type="number" class="validate"></td>
+                        </tr>
+                        <tr>
+                          <td class="center-align"><span class="black-text">B</span></td>
+                          <td><input id="quick-B" type="number" class="validate"></td>
+                          <td><input id="standard-B" type="number" class="validate"></td>
+                        </tr>
+                        <tr>
+                          <td class="center-align"><span class="black-text">C</span></td>
+                          <td><input id="quick-C" type="number" class="validate"></td>
+                          <td><input id="standard-C" type="number" class="validate"></td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="col m12 divider"></div>
+                  <div class="col m12">
+                    <div class="collapsible-body-header deep-purple lighten-5">
+                      <h6>
+                        <i class="material-icons">airport_shuttle</i>
+                        W4 QUANTITY OF VEHICLES
+                      </h6>
+                    </div>
+                    <div>
+                      <div class="input-field">
+                        <input placeholder="Bikes" id="bike_qty" type="number" class="validate">
+                        <label for="bike_qty">Bikes</label>
+                      </div>
+                      <div class="input-field">
+                        <input placeholder="Motorbikes" id="motorbike_qty" type="number" class="validate">
+                        <label for="motorbike_qty">Motorbikes</label>
+                      </div>
+                      <div class="input-field">
+                        <input placeholder="Cars" id="car_qty" type="number" class="validate">
+                        <label for="car_qty">Cars</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </li>
             </ul>
           </li>
 
-
-
-          <li><div class="divider"></div></li>
-          <li><a class="subheader">Subheader</a></li>
-          <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+<!--          <li><div class="divider"></div></li>-->
+<!--          <li><a class="subheader">Subheader</a></li>-->
+<!--          <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>-->
         </ul>
       </div>
       <div class="col s10 m10">

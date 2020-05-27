@@ -34,8 +34,8 @@
     transform: translateX(0%) !important;
 }
 
-.collapsible-body {
-    /*padding: 1rem !important;*/
+.collapsible-body-header {
+    padding: 1px 1px 2px;
 }
 
 .logo {
@@ -46,4 +46,8 @@
 .circle {
     width: 100px !important;
     height: 100px !important;
+}
+
+i.icon-white {
+    color: white;
 }
