@@ -18,10 +18,6 @@ require("channels")
 // const imagePath = (name) => images(name, true)
 
 $(document).ready(function(){
-    console.log('jquery activo');
-
-    console.log('fin highchart');
-
     $('#simulate-dss').click(function() {
         var date = $('#date-dss').val();
 
@@ -29,13 +25,29 @@ $(document).ready(function(){
         var z2 = $('#z2-dss').val();
         var z3 = $('#z3-dss').is(":checked");
 
-        // var x1 = $('#date-dss');
-        // var x2 = $('#date-dss');
-        //
-        // var w1 = $('#date-dss');
-        // var w2 = $('#date-dss');
-        // var w3 = $('#date-dss');
-        // var w4 = $('#date-dss');
+        var x1_bike = $('#x1-bike').is(":checked");
+        var x1_moto = $('#x1-moto').is(":checked");
+        var x1_car = $('#x1-car').is(":checked");
+        var x2 = $('#x2-dss').val();
+
+        var w1_bike = $('#w1-bike').val();
+        var w1_moto = $('#w1-moto').val();
+        var w1_car = $('#w1-car').val();
+
+        var w2_payroll = $('#w2-payroll').val();
+        var w2_infrastructure = $('#w2-infrastructure').val();
+        var w2_marketing = $('#w2-marketing').val();
+
+        var w3_a_quick = $('#w3-a-quick').val();
+        var w3_b_quick = $('#w3-b-quick').val();
+        var w3_c_quick = $('#w3-c-quick').val();
+        var w3_a_standard = $('#w3-a-standard').val();
+        var w3_b_standard = $('#w3-b-standard').val();
+        var w3_c_standard = $('#w3-c-standard').val();
+
+        var w4_bike = $('#w4-bike').val();
+        var w4_moto = $('#w4-moto').val();
+        var w4_car = $('#w4-car').val();
 
         $.ajax({
             url: '/dashboard/ies',
@@ -52,8 +64,6 @@ $(document).ready(function(){
     });
 
     console.log('fin jquery click');
-
-
 
     var char1 = Highcharts.chart('container1', {
         chart: {

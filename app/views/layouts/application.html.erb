@@ -57,6 +57,7 @@
               <li><a href="/dashboard/index">DSS</a></li>
               <li><a href="/dashboard/ies">IES</a></li>
               <li><a href="#">About us</a></li>
+              <li><a href="#"><i class="material-icons icon-white">help_outline</i></a></li>
             </ul>
           </div>
         </nav>
@@ -107,7 +108,7 @@
                       </h6>
                     </div>
                     <div>
-                      <select id="z1-dss" class="browser-default">
+                      <select id="z1" class="browser-default">
                         <option value="" disabled selected>Choose your option</option>
                         <option value="1">Low</option>
                         <option value="2">Regular</option>
@@ -124,7 +125,7 @@
                       </h6>
                     </div>
                     <div>
-                      <select id="z2-dss" class="browser-default">
+                      <select id="z2" class="browser-default">
                         <option value="" disabled selected>Choose your option</option>
                         <option value="1">Low</option>
                         <option value="2">Regular</option>
@@ -144,7 +145,7 @@
                       <div class="switch">
                         <label>
                           <span class="red-text">Off</span>
-                          <input id="z3-dss" type="checkbox">
+                          <input id="z3" type="checkbox">
                           <span class="lever"></span>
                           <span class="blue-text">On</span>
                         </label>
@@ -170,19 +171,19 @@
                     <div>
                       <p>
                         <label>
-                          <input type="checkbox" class="filled-in" />
+                          <input type="checkbox" id="x1-bike" class="filled-in" />
                           <span class="black-text"><i class="material-icons">directions_bike</i> Bike</span>
                         </label>
                       </p>
                       <p>
                         <label>
-                          <input type="checkbox" class="filled-in" />
+                          <input type="checkbox" id="x1-moto" class="filled-in" />
                           <span class="black-text"><i class="material-icons">motorcycle</i> Motorbike</span>
                         </label>
                       </p>
                       <p>
                         <label>
-                          <input type="checkbox" class="filled-in" />
+                          <input type="checkbox" id="x1-car" class="filled-in" />
                           <span class="black-text"><i class="material-icons">directions_car</i> Car</span>
                         </label>
                       </p>
@@ -198,7 +199,7 @@
                     </div>
                     <div>
                       <p class="range-field">
-                        <input type="range" id="test5" min="0" max="100" />
+                        <input type="range" id="x2-dss" min="0" max="100" />
                       </p>
                     </div>
                   </div>
@@ -220,15 +221,15 @@
                     </div>
                     <div>
                       <div class="input-field">
-                        <input placeholder="Bike cost" id="bike_cost" type="number" class="validate">
+                        <input placeholder="Bike cost" id="w1-bike" type="number" class="validate">
                         <label for="bike_cost">Bike cost</label>
                       </div>
                       <div class="input-field">
-                        <input placeholder="Motorbike cost" id="motorbike_cost" type="number" class="validate">
+                        <input placeholder="Motorbike cost" id="w1-moto" type="number" class="validate">
                         <label for="motorbike_cost">Motorbike cost</label>
                       </div>
                       <div class="input-field">
-                        <input placeholder="Car cost" id="car_cost" type="number" class="validate">
+                        <input placeholder="Car cost" id="w1-car" type="number" class="validate">
                         <label for="car_cost">Car cost</label>
                       </div>
                     </div>
@@ -243,15 +244,15 @@
                     </div>
                     <div>
                       <div class="input-field">
-                        <input placeholder="Payroll" id="payroll" type="number" class="validate">
+                        <input placeholder="Payroll" id="w2-payroll" type="number" class="validate">
                         <label for="payroll">Payroll</label>
                       </div>
                       <div class="input-field">
-                        <input placeholder="Infrastructure" id="infrastructure" type="number" class="validate">
+                        <input placeholder="Infrastructure" id="w2-infrastructure" type="number" class="validate">
                         <label for="infrastructure">Infrastructure</label>
                       </div>
                       <div class="input-field">
-                        <input placeholder="Marketing" id="marketing" type="number" class="validate">
+                        <input placeholder="Marketing" id="w2-marketing" type="number" class="validate">
                         <label for="marketing">Marketing</label>
                       </div>
                     </div>
@@ -276,18 +277,18 @@
                         <tbody>
                         <tr>
                           <td class="center-align"><span class="black-text">A</span></td>
-                          <td><input id="quick-A" type="number" class="validate"></td>
-                          <td><input id="standard-A" type="number" class="validate"></td>
+                          <td><input id="w3-a-quick" type="number" class="validate"></td>
+                          <td><input id="w3-a-standard" type="number" class="validate"></td>
                         </tr>
                         <tr>
                           <td class="center-align"><span class="black-text">B</span></td>
-                          <td><input id="quick-B" type="number" class="validate"></td>
-                          <td><input id="standard-B" type="number" class="validate"></td>
+                          <td><input id="w3-b-quick" type="number" class="validate"></td>
+                          <td><input id="w3-b-standard" type="number" class="validate"></td>
                         </tr>
                         <tr>
                           <td class="center-align"><span class="black-text">C</span></td>
-                          <td><input id="quick-C" type="number" class="validate"></td>
-                          <td><input id="standard-C" type="number" class="validate"></td>
+                          <td><input id="w3-c-quick" type="number" class="validate"></td>
+                          <td><input id="w3-c-standard" type="number" class="validate"></td>
                         </tr>
                         </tbody>
                       </table>
@@ -298,21 +299,20 @@
                     <div class="collapsible-body-header deep-purple lighten-5">
                       <h6>
                         <i class="material-icons">commute</i>
-<!--                        <i class="material-icons">airport_shuttle</i>-->
                         W4 QUANTITY OF VEHICLES
                       </h6>
                     </div>
                     <div>
                       <div class="input-field">
-                        <input placeholder="Bikes" id="bike_qty" type="number" class="validate">
+                        <input placeholder="Bikes" id="w4-bike" type="number" class="validate">
                         <label for="bike_qty">Bikes</label>
                       </div>
                       <div class="input-field">
-                        <input placeholder="Motorbikes" id="motorbike_qty" type="number" class="validate">
+                        <input placeholder="Motorbikes" id="w4-moto" type="number" class="validate">
                         <label for="motorbike_qty">Motorbikes</label>
                       </div>
                       <div class="input-field">
-                        <input placeholder="Cars" id="car_qty" type="number" class="validate">
+                        <input placeholder="Cars" id="w4-car" type="number" class="validate">
                         <label for="car_qty">Cars</label>
                       </div>
                     </div>
