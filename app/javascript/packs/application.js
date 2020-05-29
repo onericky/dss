@@ -50,15 +50,18 @@ $(document).ready(function(){
         var w4_car = $('#w4-car').val();
 
         $.ajax({
-            url: '/dashboard/ies',
+            url: '/dashboard/index',
             data: {'partNo': 'funciona'},
-            dataType: 'html',
-            type: 'GET',
+            dataType: "json",
+            type: 'post',
             beforeSend: function () {
                 console.log('before');
             },
-            success: function (response) {
+            success: function(response) {
+                console.log(response);
                 console.log('todo bien');
+            }, error: function (e) {
+                console.log(e);
             }
         })
     });

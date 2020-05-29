@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  post 'dashboard/index'
   get 'dashboard/index'
   get 'dashboard/ies'
 
