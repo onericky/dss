@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="shortcut icon" href="/assets/logo.png"/>
     <title>DSS A+</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -42,11 +43,10 @@
 <!--    <script src="https://code.highcharts.com/modules/export-data.js"></script>-->
 <!--    <script src="https://code.highcharts.com/modules/accessibility.js"></script>-->
     <script src="http://code.highcharts.com/stock/highstock.js"></script>
-
   </head>
 
   <body>
-    <div class="row">
+    <div id="nav-dss" class="row">
       <div class="col s10 m10 nav-main">
         <nav>
           <div class="nav-wrapper blue darken-4">
@@ -56,7 +56,7 @@
               <li><a href="#" data-activates="mobile-demo" class="button-collapse show-on-large sidenav-trigger" data-target="slide-out"><i class="material-icons">menu</i></a></li>
               <li><a href="/dashboard/index">DSS</a></li>
               <li><a href="/dashboard/ies">IES</a></li>
-              <li><a href="#">Documentation</a></li>
+              <li><a href="/dashboard/documentation">Documentation</a></li>
               <li><a href="#">About us</a></li>
               <li><a href="#"><i class="material-icons icon-white">help_outline</i></a></li>
             </ul>
@@ -80,7 +80,7 @@
           </div>
           </li>
 
-          <li>
+          <li id="sidenav-dss">
 
 <!--            <ul class="collapsible">-->
 <!--              <li>-->

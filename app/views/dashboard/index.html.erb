@@ -1,7 +1,67 @@
 <div class="row">
+  <div id="preloader-dss" class="preloader-background">
+    <div class="preloader-wrapper big active">
+      <div class="spinner-layer spinner-blue">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+          <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+
+      <div class="spinner-layer spinner-red">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+          <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+
+      <div class="spinner-layer spinner-yellow">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+          <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+
+      <div class="spinner-layer spinner-green">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+          <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+    </div>
+    <p class="blinking">Loading</p>
+
+<!--    <div class="progress">-->
+<!--      <div class="indeterminate" style="width: 70%"></div>-->
+<!--    </div>-->
+
+  </div>
+</div>
+
+<div id="index-dss" class="row">
   <div class="col s1 m1">
     <div class="input-field">
-      <input type="text" id="date-dss" class="datepicker">
+      <input type="text" id="date-dss" class="datepicker" required aria-required="true">
       <label for="bike_cost">Date</label>
     </div>
   </div>
@@ -9,10 +69,6 @@
     <a id="simulate-dss" class="waves-effect waves-light btn pink darken-4"><i class="material-icons left">send</i>SIMULATE</a>
   </div>
 </div>
-
-<%= debug @params %>
-<%= debug @yes %>
-<%= debug @var %>
 
 <!--<div>-->
 <!--  <div class="row">-->

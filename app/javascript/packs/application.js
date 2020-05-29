@@ -49,13 +49,49 @@ $(document).ready(function(){
         var w4_moto = $('#w4-moto').val();
         var w4_car = $('#w4-car').val();
 
+        var errors = 0;
+        console.log(date);
+        if(date === "") {
+            M.toast({html: 'Date is required!'});
+            errors ++;
+        }
+
+        if(errors > 0) {
+            return 0;
+        }
+
+
         $.ajax({
-            url: '/dashboard/index',
-            data: {'partNo': 'funciona'},
+            url: '/dashboard/simulate',
+            data: {'date': date,
+                    'z1': z1,
+                    'z2': z2,
+                    'z3': z3,
+                    'x1_bike': x1_bike,
+                    'x1_moto': x1_moto,
+                    'x1_car': x1_car,
+                    'x2': x2,
+                    'w1_bike': w1_bike,
+                    'w1_moto': w1_moto,
+                    'w1_car': w1_car,
+                    'w2_payroll': w2_payroll,
+                    'w2_infrastructure': w2_infrastructure,
+                    'w2_marketing': w2_marketing,
+                    'w3_a_quick': w3_a_quick,
+                    'w3_b_quick': w3_b_quick,
+                    'w3_c_quick': w3_c_quick,
+                    'w3_a_standard': w3_a_standard,
+                    'w3_b_standard': w3_b_standard,
+                    'w3_c_standard': w3_c_standard,
+                    'w4_bike': w4_bike,
+                    'w4_moto': w4_moto,
+                    'w4_car': w4_car,
+            },
             dataType: "json",
             type: 'post',
             beforeSend: function () {
                 console.log('before');
+                preloader();
             },
             success: function(response) {
                 console.log(response);
@@ -447,4 +483,11 @@ $(document).ready(function(){
         }
     });
 });
+
+function preloader() {
+    $('#preloader-dss').show();
+    $('#index-dss').css('opacity', '0.4');
+    $('#nav-dss').css('opacity', '0.4');
+    $('#sidenav-dss').css('opacity', '0.4');
+}
 

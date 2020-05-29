@@ -58,6 +58,39 @@ i.icon-white {
     color: white;
 }
 
+#preloader-dss {
+    display: none;
+    width: auto;
+    height: auto;
+    left: 50%;
+    top: 40%;
+}
+
+.preloader-background {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.preloader-background p {
+    padding-top: 40px;
+    opacity: 0.2;
+}
+
+.blinking {
+    animation: blinker 2s linear infinite;
+}
+
+@keyframes blinker {
+    50% { opacity: 0.9; }
+}
+
 
 /* Highcharts */
 .highcharts-pie-series .highcharts-point {
