@@ -21,14 +21,14 @@ $(document).ready(function(){
     $('#simulate-dss').click(function() {
         var date = $('#date-dss').val();
 
-        var z1 = $('#z1-dss').val();
-        var z2 = $('#z2-dss').val();
-        var z3 = $('#z3-dss').is(":checked");
+        var z1 = $('#z1').val();
+        var z2 = $('#z2').val();
+        var z3 = $('#z3').is(":checked");
 
         var x1_bike = $('#x1-bike').is(":checked");
         var x1_moto = $('#x1-moto').is(":checked");
         var x1_car = $('#x1-car').is(":checked");
-        var x2 = $('#x2-dss').val();
+        var x2 = $('#x2').val();
 
         var w1_bike = $('#w1-bike').val();
         var w1_moto = $('#w1-moto').val();
@@ -53,13 +53,16 @@ $(document).ready(function(){
         console.log(date);
         if(date === "") {
             M.toast({html: 'Date is required!'});
-            errors ++;
+            // errors ++;
         }
 
         if(errors > 0) {
             return 0;
         }
 
+        console.log(z1);
+        console.log(z2);
+        console.log(z3);
 
         $.ajax({
             url: '/dashboard/simulate',
@@ -90,8 +93,7 @@ $(document).ready(function(){
             dataType: "json",
             type: 'post',
             beforeSend: function () {
-                console.log('before');
-                preloader();
+                // preloader();
             },
             success: function(response) {
                 console.log(response);
@@ -101,8 +103,6 @@ $(document).ready(function(){
             }
         })
     });
-
-    console.log('fin jquery click');
 
     var char1 = Highcharts.chart('container1', {
         chart: {

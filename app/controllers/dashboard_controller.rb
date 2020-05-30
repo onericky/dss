@@ -28,36 +28,122 @@ class DashboardController < ApplicationController
                   :w4_bike => params[:w4_bike], :w4_moto => params[:w4_moto], :w4_car => params[:w4_car]}
 
         i = 0
-        @max = [rand(110), rand(150)]
+        @max = 120 + rand(31)
 
-        fixed = 20
-        variable_cost = 10
+        fixed = 25
+        @variable_cost = @var_w[:w2_marketing].to_f
+        @fixed_cost = @var_w[:w2_payroll].to_f + @var_w[:w2_infrastructure].to_f
+        operating_expenses = @fixed_cost + @variable_cost
 
-        # fixed_cost = @var_w[:w2_payroll] + @var_w[:w2_infrastructure]
-        # operating_expenses = fixed_cost + variable_cost
+        mZone = Zone.new
+        @zones = mZone.getZones()
+
+        # @zones.each do |zn|
+        #   @zn = zn.zoneName
+        # end
+
+        # Tomar tipo de orden quick o standard
+
 
         # modificar
         type_per = 0.1
         zone_per = 0.15
         vehi_per = 0.2
-        risk_cost = 7
-        weather = 3
 
-        # while i < max  do
-        #   pay = fixed + (fixed * type_per) + (fixed * zone_per) + (fixed * vehi_per) + risk_cost + weather
-        #   # guardar pay
-        #   i +=1
-        # end
-        # @z3 = @var_z[:z3]
-        render "ies", var_z: @var_z, max: @max
+
+        @pay = Hash.new
+
+        while i < @max  do
+          # order type
+          if(true)
+            # 10% quick
+            # 25% standar
+            type_per = 0.10
+          end
+
+          # zone
+          if(true)
+
+            # 12% zona A
+            # 15% Zona B
+            # 35% Zona C
+            # zone_per = 0.15
+            zone_per = getZone
+          end
+
+          # vehiculo
+          if(true)
+            # 15% bici
+            # 20% moto
+            # 30% carro
+            vehi_per = 0.20
+          end
+
+          risk_cost = getRisk(@var_z[:z1])
+          traffic = getTraffic(@var_z[:z2])
+          weather = getWeather(@var_z[:z3])
+
+          pay = fixed + (fixed * type_per) + (fixed * zone_per) + (fixed * vehi_per) + risk_cost + traffic + weather
+          # guardar pay
+          @pay[i] = ['pay' => pay]
+
+          i +=1
+        end
+
+
+        @varz1 = @var_z[:z1]
+        @z3 = @var_z[:z3]
+        render "ies", max: @max, pay: @pay
         # render json: {'ok': 'algo'}
     end
   end
 
-  private
-
   def wformula
 
+  end
+
+  def getRisk(z1)
+    case z1
+    when '1'
+      return 0
+    when '2'
+      return 7
+    when '3'
+      return 15
+      else return 0
+    end
+  end
+
+  def getTraffic(z2)
+    case z2
+    when '1'
+      return 0
+    when '2'
+      return 7
+    when '3'
+      return 15
+    else return 0
+    end
+  end
+
+  def getWeather(z3)
+    if(z3 == 'true')
+      return 3
+    else
+      return 10
+    end
+  end
+
+  def getZone
+    random_zone = 1 + rand(3)
+    case random_zone
+    when 1
+      return 0.12
+    when 2
+      return 0.15
+    when 3
+      return  0.35
+    end
   end
 
 end
