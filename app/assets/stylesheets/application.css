@@ -91,6 +91,14 @@ i.icon-white {
     50% { opacity: 0.9; }
 }
 
+.no-display {
+    display: none !important;
+}
+
+#charIndex {
+
+}
+
 
 /* Highcharts */
 .highcharts-pie-series .highcharts-point {

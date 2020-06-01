@@ -1,9 +1,12 @@
 class DashboardController < ApplicationController
 
+  @simulation = Hash.new
+
   def index
     mTT = TableTest.new
 
     # @value = mTT.getTest()
+    # mTT.insert
     @yes = "Si"
   end
 
@@ -28,7 +31,9 @@ class DashboardController < ApplicationController
                   :w4_bike => params[:w4_bike], :w4_moto => params[:w4_moto], :w4_car => params[:w4_car]}
 
         i = 0
-        @max = 120 + rand(31)
+        @max = getQuantityOrders(@var_w[:w3_a_quick].to_i, @var_w[:w3_b_quick].to_i, @var_w[:w3_c_quick].to_i, @var_w[:w3_a_standard].to_i, @var_w[:w3_b_standard].to_i, @var_w[:w3_c_standard].to_i)
+        # @max = 120 + rand(31)
+        # total de órdenes sumas todas w3
 
         fixed = 25
         @variable_cost = @var_w[:w2_marketing].to_f
@@ -42,59 +47,42 @@ class DashboardController < ApplicationController
         #   @zn = zn.zoneName
         # end
 
-        # Tomar tipo de orden quick o standard
-
-
-        # modificar
-        type_per = 0.1
-        zone_per = 0.15
-        vehi_per = 0.2
-
-
         @pay = Hash.new
+        @data2 = Hash.new
+        @categories = ""
 
         while i < @max  do
-          # order type
-          if(true)
-            # 10% quick
-            # 25% standar
-            type_per = 0.10
-          end
-
-          # zone
-          if(true)
-
-            # 12% zona A
-            # 15% Zona B
-            # 35% Zona C
-            # zone_per = 0.15
-            zone_per = getZone
-          end
-
-          # vehiculo
-          if(true)
-            # 15% bici
-            # 20% moto
-            # 30% carro
-            vehi_per = 0.20
-          end
-
-          risk_cost = getRisk(@var_z[:z1])
-          traffic = getTraffic(@var_z[:z2])
+          type_per = getOrderType
+          vehi_per = getVehicle(@var_w[:w4_bike].to_i, @var_w[:w4_moto].to_i, @var_w[:w4_car].to_i)
+          zone_per = getZone
+          risk_cost = getRisk(@var_z[:z1].to_i)
           weather = getWeather(@var_z[:z3])
+          # multiplicar descuento
+          #
 
-          pay = fixed + (fixed * type_per) + (fixed * zone_per) + (fixed * vehi_per) + risk_cost + traffic + weather
+          # no afecta en costo solo en tiempo
+          traffic = getTraffic(@var_z[:z2].to_i)
+
+          pay = fixed + (fixed * type_per) + (fixed * zone_per) + (fixed * vehi_per) + risk_cost + weather
           # guardar pay
           @pay[i] = ['pay' => pay]
+          @data2[i] = pay
 
           i +=1
+          @categories += "'order" + i.to_s + "', "
         end
 
+        @data = ""
+        @categories = @categories.first(-2)
+        @data2.each do |k, v|
+          @data += v.to_s + ', '
+        end
 
-        @varz1 = @var_z[:z1]
-        @z3 = @var_z[:z3]
-        render "ies", max: @max, pay: @pay
-        # render json: {'ok': 'algo'}
+        # guardar modelo con rollback
+
+        # render "index", max: @max, pay: @pay, categories: @categories, data: @data
+        # render :json => "alert('Hello Rails');", return => {'ok': 'algo'}
+        render json: {'ok': 'algo', 'data': @data, 'categories': @categories}
     end
   end
 
@@ -102,13 +90,17 @@ class DashboardController < ApplicationController
 
   end
 
+  def getQuantityOrders(w3_a_quick, w3_b_quick, w3_c_quick, w3_a_standard, w3_b_standard, w3_c_standard)
+    return (w3_a_quick + w3_b_quick + w3_c_quick + w3_a_standard + w3_b_standard + w3_c_standard)
+  end
+
   def getRisk(z1)
     case z1
-    when '1'
+    when 1
       return 0
-    when '2'
+    when 2
       return 7
-    when '3'
+    when 3
       return 15
       else return 0
     end
@@ -116,11 +108,11 @@ class DashboardController < ApplicationController
 
   def getTraffic(z2)
     case z2
-    when '1'
+    when 1
       return 0
-    when '2'
+    when 2
       return 7
-    when '3'
+    when 3
       return 15
     else return 0
     end
@@ -143,6 +135,33 @@ class DashboardController < ApplicationController
       return 0.15
     when 3
       return  0.35
+    end
+  end
+
+  def getVehicle(nBikes, nMotorbikes, nCars)
+    number = {'bike' => (1 + rand(nBikes)),
+              'moto' => (1 + rand(nMotorbikes)),
+              'car' => (1 + rand(nCars))}
+
+    max = number.key(number.values.max)
+
+    case max
+    when 'bike'
+      return 0.15
+    when 'moto'
+      return 0.20
+    when 'car'
+      return 0.20
+    end
+  end
+
+  def getOrderType
+    random_ot = 1 + rand(2)
+    case random_ot
+    when 1
+      return 0.10
+    when 2
+      return 0.25
     end
   end
 

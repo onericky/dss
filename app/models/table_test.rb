@@ -6,4 +6,10 @@ class TableTest < ApplicationRecord
     # Client.where(first_name: 'Lifo').take
   end
 
+  def insert
+    row = TableTest.new
+    row.name = "rails"
+    row.save
+  end
+
 end

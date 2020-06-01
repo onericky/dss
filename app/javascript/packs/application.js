@@ -98,8 +98,10 @@ $(document).ready(function(){
             success: function(response) {
                 console.log(response);
                 console.log('todo bien');
+                fCharIndex(response);
             }, error: function (e) {
-                console.log(e);
+                // console.log(e);
+                console.log('error ajax')
             }
         })
     });
@@ -140,8 +142,6 @@ $(document).ready(function(){
         }]
     });
 
-
-
     var char2 = Highcharts.chart('container2', {
 
         chart: {
@@ -173,8 +173,6 @@ $(document).ready(function(){
             showInLegend: true
         }]
     });
-
-
 
     var char3 = Highcharts.chart('container3', {
         chart: {
@@ -491,3 +489,42 @@ function preloader() {
     $('#sidenav-dss').css('opacity', '0.4');
 }
 
+function fCharIndex(dataR) {
+    console.log(dataR);
+    console.log('js index');
+    var datac = dataR.data
+    var categories = dataR.categories
+
+    console.log('*******************');
+    console.log(datac);
+    console.log(categories);
+
+    $('#charIndex').show();
+    console.log('mostrar chars de simulación');
+
+    var chart = Highcharts.chart('containerIndex', {
+
+        title: {
+            text: 'Chart.update'
+        },
+
+        subtitle: {
+            text: 'Plain'
+        },
+
+        xAxis: {
+            categories: ['order1', 'order2']
+            // categories: [categories]
+            // categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        },
+
+        series: [{
+            type: 'column',
+            colorByPoint: true,
+            data: [12.2, 23.5],
+            // data: [data],
+            // data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+            showInLegend: false
+        }]
+    });
+}
