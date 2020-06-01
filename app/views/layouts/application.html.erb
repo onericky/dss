@@ -30,7 +30,7 @@
 
             var date = new Date();
             var elems3 = document.querySelectorAll('.datepicker');
-            var picker = M.Datepicker.init(elems3, {'disableDayFn': function(date) {
+            var picker = M.Datepicker.init(elems3, {'format': 'yyyy-mm-dd','disableDayFn': function(date) {
                     if(date.getDay() == 0)
                         return false;
                     else
@@ -38,10 +38,6 @@
                 }});
         };
     </script>
-<!--    <script src="https://code.highcharts.com/highcharts.js"></script>-->
-<!--    <script src="https://code.highcharts.com/modules/exporting.js"></script>-->
-<!--    <script src="https://code.highcharts.com/modules/export-data.js"></script>-->
-<!--    <script src="https://code.highcharts.com/modules/accessibility.js"></script>-->
     <script src="http://code.highcharts.com/stock/highstock.js"></script>
   </head>
 
@@ -200,7 +196,7 @@
                     </div>
                     <div>
                       <p class="range-field">
-                        <input type="range" id="x2" min="0" max="100" />
+                        <input type="range" id="x2" min="0" max="100" value="0"/>
                       </p>
                     </div>
                   </div>
@@ -278,18 +274,18 @@
                         <tbody>
                         <tr>
                           <td class="center-align"><span class="black-text">A</span></td>
-                          <td><input id="w3-a-quick" type="number" class="validate"></td>
-                          <td><input id="w3-a-standard" type="number" class="validate"></td>
+                          <td><input id="w3-a-quick" type="number" class="validate" value=1></td>
+                          <td><input id="w3-a-standard" type="number" class="validate" value=1></td>
                         </tr>
                         <tr>
                           <td class="center-align"><span class="black-text">B</span></td>
-                          <td><input id="w3-b-quick" type="number" class="validate"></td>
-                          <td><input id="w3-b-standard" type="number" class="validate"></td>
+                          <td><input id="w3-b-quick" type="number" class="validate" value=1></td>
+                          <td><input id="w3-b-standard" type="number" class="validate" value=1></td>
                         </tr>
                         <tr>
                           <td class="center-align"><span class="black-text">C</span></td>
-                          <td><input id="w3-c-quick" type="number" class="validate"></td>
-                          <td><input id="w3-c-standard" type="number" class="validate"></td>
+                          <td><input id="w3-c-quick" type="number" class="validate" value=1></td>
+                          <td><input id="w3-c-standard" type="number" class="validate" value=1></td>
                         </tr>
                         </tbody>
                       </table>
@@ -305,15 +301,15 @@
                     </div>
                     <div>
                       <div class="input-field">
-                        <input placeholder="Bikes" id="w4-bike" type="number" class="validate">
+                        <input placeholder="Bikes" id="w4-bike" type="number" class="validate" value=5>
                         <label for="bike_qty">Bikes</label>
                       </div>
                       <div class="input-field">
-                        <input placeholder="Motorbikes" id="w4-moto" type="number" class="validate">
+                        <input placeholder="Motorbikes" id="w4-moto" type="number" class="validate" value=5>
                         <label for="motorbike_qty">Motorbikes</label>
                       </div>
                       <div class="input-field">
-                        <input placeholder="Cars" id="w4-car" type="number" class="validate">
+                        <input placeholder="Cars" id="w4-car" type="number" class="validate" value=5>
                         <label for="car_qty">Cars</label>
                       </div>
                     </div>

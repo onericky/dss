@@ -58,6 +58,11 @@ i.icon-white {
     color: white;
 }
 
+input[type=range]+.thumb.active .value {
+    margin-left: 0 !important;
+    margin-top: -8px !important;
+}
+
 #preloader-dss {
     display: none;
     width: auto;
@@ -92,13 +97,8 @@ i.icon-white {
 }
 
 .no-display {
-    display: none !important;
+    display: none;
 }
-
-#charIndex {
-
-}
-
 
 /* Highcharts */
 .highcharts-pie-series .highcharts-point {

@@ -68,32 +68,49 @@
   <div class="col s2 m2">
     <a id="simulate-dss" class="waves-effect waves-light btn pink darken-4"><i class="material-icons left">send</i>SIMULATE</a>
   </div>
-
-  <div class="row">
-    <%= @value %>
-    <%= @categories %>
-    <%= @data %>
-  </div>
-
 </div>
 
-<div class="row" style="margin-top: 80px">
-  <div id="char1" class="col m12 s12 no-display">
-    <p id="categories" class="no-display">
-      order1
-    </p>
-    <p id="data">
-      25
-    </p>
-  </div>
+<div class="row" style="margin-top: 50px !important;">
+  <%= debug @id_week %>
 </div>
+<div class="row" style="margin-top: 50px !important;">
+  <%= debug @date %>
+</div>
+
 
 <div class="row" id="charIndex">
   <figure class="highcharts-figure">
     <div id="containerIndex"></div>
-    <p class="highcharts-description">
-      Chart with buttons to modify options, showing how options can be changed
-      on the fly. This flexibility allows for more dynamic charts.
+    <p class="highcharts-description no-display">
+      text sample
     </p>
   </figure>
+</div>
+
+<div class="row">
+  <div class="col m6 s6" id="charIndexTime">
+    <figure class="highcharts-figure">
+      <div id="containerIndexTime"></div>
+    </figure>
+  </div>
+
+  <div class="col m6 s" id="charIndexRevenue">
+    <figure class="highcharts-figure">
+      <div id="containerIndexRevenue"></div>
+    </figure>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col m6 s6" id="charIndexQuantity">
+    <figure class="highcharts-figure">
+      <div id="containerIndexQuantity"></div>
+    </figure>
+  </div>
+
+  <div class="col m6 s" id="charIndexRevenue2">
+    <figure class="highcharts-figure">
+      <div id="containerIndexRevenue2"></div>
+    </figure>
+  </div>
 </div>
