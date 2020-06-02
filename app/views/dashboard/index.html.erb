@@ -65,18 +65,17 @@
       <label for="bike_cost">Date</label>
     </div>
   </div>
-  <div class="col s2 m2">
+  <div class="col s2 m2 btn-simulate">
     <a id="simulate-dss" class="waves-effect waves-light btn pink darken-4"><i class="material-icons left">send</i>SIMULATE</a>
   </div>
 </div>
 
-<div class="row" style="margin-top: 50px !important;">
-  <%= debug @id_week %>
-</div>
-<div class="row" style="margin-top: 50px !important;">
-  <%= debug @date %>
-</div>
-
+<!--<div class="row" style="margin-top: 50px !important;">-->
+  <%#= debug @id_week %>
+<!--</div>-->
+<!--<div class="row" style="margin-top: 50px !important;">-->
+  <%#= debug @date %>
+<!--</div>-->
 
 <div class="row" id="charIndex">
   <figure class="highcharts-figure">
@@ -108,9 +107,9 @@
     </figure>
   </div>
 
-  <div class="col m6 s" id="charIndexRevenue2">
+  <div class="col m6 s" id="charIndexTotalRevenue">
     <figure class="highcharts-figure">
-      <div id="containerIndexRevenue2"></div>
+      <div id="containerIndexTotalRevenue"></div>
     </figure>
   </div>
 </div>

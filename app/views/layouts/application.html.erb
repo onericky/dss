@@ -38,7 +38,12 @@
                 }});
         };
     </script>
-    <script src="http://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
   </head>
 
   <body>
@@ -53,8 +58,8 @@
               <li><a href="/dashboard/index">DSS</a></li>
               <li><a href="/dashboard/ies">IES</a></li>
               <li><a href="/dashboard/documentation">Documentation</a></li>
-              <li><a href="#">About us</a></li>
-              <li><a href="#"><i class="material-icons icon-white">help_outline</i></a></li>
+              <li><a href="/dashboard/about">About us</a></li>
+              <li><a href="/dashboard/help"><i class="material-icons icon-white">help_outline</i></a></li>
             </ul>
           </div>
         </nav>
@@ -67,30 +72,16 @@
         <ul id="slide-out" class="sidenav">
           <li>
             <div class="user-view">
-            <div class="background">
-              <img src="/assets/background.png" width="350px" height="350px">
+              <div class="background">
+                <img src="/assets/background.png" width="350px" height="350px">
+              </div>
+              <a href="#"><img class="circle" src="/assets/logo.png"></a>
+              <a href="#"><span class="white-text name">Awesome Plus</span></a>
+              <a href="#"><span class="white-text email">Universidad Aut&oacute;noma de Aguascalientes</span></a>
             </div>
-            <a href="#"><img class="circle" src="/assets/logo.png"></a>
-            <a href="#"><span class="white-text name">Awesome Plus</span></a>
-            <a href="#"><span class="white-text email">Universidad Aut&oacute;noma de Aguascalientes</span></a>
-          </div>
           </li>
 
           <li id="sidenav-dss">
-
-<!--            <ul class="collapsible">-->
-<!--              <li>-->
-<!--                <div class="collapsible-header waves-effect waves-purple light-blue darken-4"><i class="material-icons icon-white">date_range</i></div>-->
-<!--                <div class="collapsible-body">-->
-<!--                  <div class="col m12">-->
-<!--                    <div class="input-field">-->
-<!--                      <input type="text" class="datepicker">-->
-<!--                      <label for="bike_cost">Date</label>-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </li>-->
-<!--            </ul>-->
 
             <div class="col m12 divider"></div>
             <ul class="collapsible">
@@ -218,15 +209,15 @@
                     </div>
                     <div>
                       <div class="input-field">
-                        <input placeholder="Bike cost" id="w1-bike" type="number" class="validate">
+                        <input placeholder="Bike cost" id="w1-bike" type="number" class="validate" value="15">
                         <label for="bike_cost">Bike cost</label>
                       </div>
                       <div class="input-field">
-                        <input placeholder="Motorbike cost" id="w1-moto" type="number" class="validate">
+                        <input placeholder="Motorbike cost" id="w1-moto" type="number" class="validate" value="20">
                         <label for="motorbike_cost">Motorbike cost</label>
                       </div>
                       <div class="input-field">
-                        <input placeholder="Car cost" id="w1-car" type="number" class="validate">
+                        <input placeholder="Car cost" id="w1-car" type="number" class="validate" value="25">
                         <label for="car_cost">Car cost</label>
                       </div>
                     </div>
@@ -241,15 +232,15 @@
                     </div>
                     <div>
                       <div class="input-field">
-                        <input placeholder="Payroll" id="w2-payroll" type="number" class="validate">
+                        <input placeholder="Payroll" id="w2-payroll" type="number" class="validate" value="500">
                         <label for="payroll">Payroll</label>
                       </div>
                       <div class="input-field">
-                        <input placeholder="Infrastructure" id="w2-infrastructure" type="number" class="validate">
+                        <input placeholder="Infrastructure" id="w2-infrastructure" type="number" class="validate" value="500">
                         <label for="infrastructure">Infrastructure</label>
                       </div>
                       <div class="input-field">
-                        <input placeholder="Marketing" id="w2-marketing" type="number" class="validate">
+                        <input placeholder="Marketing" id="w2-marketing" type="number" class="validate" value="200">
                         <label for="marketing">Marketing</label>
                       </div>
                     </div>
@@ -274,18 +265,18 @@
                         <tbody>
                         <tr>
                           <td class="center-align"><span class="black-text">A</span></td>
-                          <td><input id="w3-a-quick" type="number" class="validate" value=1></td>
-                          <td><input id="w3-a-standard" type="number" class="validate" value=1></td>
+                          <td><input id="w3-a-quick" type="number" class="validate" value=10></td>
+                          <td><input id="w3-a-standard" type="number" class="validate" value=10></td>
                         </tr>
                         <tr>
                           <td class="center-align"><span class="black-text">B</span></td>
-                          <td><input id="w3-b-quick" type="number" class="validate" value=1></td>
-                          <td><input id="w3-b-standard" type="number" class="validate" value=1></td>
+                          <td><input id="w3-b-quick" type="number" class="validate" value=10></td>
+                          <td><input id="w3-b-standard" type="number" class="validate" value=10></td>
                         </tr>
                         <tr>
                           <td class="center-align"><span class="black-text">C</span></td>
-                          <td><input id="w3-c-quick" type="number" class="validate" value=1></td>
-                          <td><input id="w3-c-standard" type="number" class="validate" value=1></td>
+                          <td><input id="w3-c-quick" type="number" class="validate" value=10></td>
+                          <td><input id="w3-c-standard" type="number" class="validate" value=10></td>
                         </tr>
                         </tbody>
                       </table>
@@ -301,15 +292,15 @@
                     </div>
                     <div>
                       <div class="input-field">
-                        <input placeholder="Bikes" id="w4-bike" type="number" class="validate" value=5>
+                        <input placeholder="Bikes" id="w4-bike" type="number" class="validate" value=10>
                         <label for="bike_qty">Bikes</label>
                       </div>
                       <div class="input-field">
-                        <input placeholder="Motorbikes" id="w4-moto" type="number" class="validate" value=5>
+                        <input placeholder="Motorbikes" id="w4-moto" type="number" class="validate" value=10>
                         <label for="motorbike_qty">Motorbikes</label>
                       </div>
                       <div class="input-field">
-                        <input placeholder="Cars" id="w4-car" type="number" class="validate" value=5>
+                        <input placeholder="Cars" id="w4-car" type="number" class="validate" value=10>
                         <label for="car_qty">Cars</label>
                       </div>
                     </div>

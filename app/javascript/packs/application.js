@@ -49,15 +49,11 @@ $(document).ready(function(){
         var w4_moto = $('#w4-moto').val();
         var w4_car = $('#w4-car').val();
 
-        var errors = validateVariables(date, z1, z2, x1_bike, x1_moto, x1_car);
+        var errors = validateVariables(date, z1, z2, x1_bike, x1_moto, x1_car, w1_bike, w1_moto, w1_car, w2_payroll, w2_infrastructure, w2_marketing);
 
         if(errors > 0) {
             return 0;
         }
-
-        console.log(z1);
-        console.log(z2);
-        console.log(z3);
 
         $.ajax({
             url: '/dashboard/simulate',
@@ -94,7 +90,7 @@ $(document).ready(function(){
                 setTimeout(function() {
                     preloader(false);
                     console.log(response);
-                    chars(response.arrayResult);
+                    chars(response);
                     }, 3000);
             }, error: function (e) {
                 console.log(e);
@@ -490,7 +486,7 @@ $(document).ready(function(){
  * @param x1_car
  * @returns {number}
  */
-function validateVariables(date, z1, z2, x1_bike, x1_moto, x1_car) {
+function validateVariables(date, z1, z2, x1_bike, x1_moto, x1_car, w1_bike, w1_moto, w1_car, w2_payroll, w2_infrastructure, w2_marketing) {
     var e = 0;
 
     if(date === "") {
@@ -510,6 +506,36 @@ function validateVariables(date, z1, z2, x1_bike, x1_moto, x1_car) {
 
     if(x1_bike === false && x1_moto === false && x1_car === false) {
         M.toast({html: 'X1 (Active Delivery Method) requires at least one to be checked'});
+        e ++;
+    }
+
+    if(w1_bike <= 0 || w1_bike == '') {
+        M.toast({html: 'W1 (Bike) requires a positive number'});
+        e ++;
+    }
+
+    if(w1_moto <= 0 || w1_moto == '') {
+        M.toast({html: 'W1 (Motobike) requires a positive number'});
+        e ++;
+    }
+
+    if(w1_car <= 0 || w1_car == '') {
+        M.toast({html: 'W1 (Car) requires a positive number'});
+        e ++;
+    }
+
+    if(w2_payroll <= 0 || w2_payroll == '') {
+        M.toast({html: 'W2 (Payroll) requires a positive number'});
+        e ++;
+    }
+
+    if(w2_infrastructure <= 0 || w2_infrastructure == '') {
+        M.toast({html: 'W2 (Infrastructure) requires a positive number'});
+        e ++;
+    }
+
+    if(w2_marketing <= 0 || w2_marketing == '') {
+        M.toast({html: 'W2 (Marketing) requires a positive number'});
         e ++;
     }
 
@@ -541,9 +567,10 @@ function preloader(show) {
  * @param dataResult
  */
 function chars(dataResult) {
-    charDeliveryTime(dataResult);
-    charRevenue(dataResult);
-    charQuantity(dataResult);
+    charDeliveryTime(dataResult.arrayResult);
+    charRevenue(dataResult.arrayResult);
+    charQuantity(dataResult.arrayResult);
+    charTotalRevenue(dataResult.operating_expenses, dataResult.total_revenue);
 }
 
 function charDeliveryTime(dataResult) {
@@ -731,6 +758,100 @@ function charQuantity(dataResult) {
             showInLegend: false
         }]
     });
+}
+
+function charTotalRevenue(operating_expenses, total_revenue) {
+    var gaugeOptions = {
+        chart: {
+            type: 'solidgauge'
+        },
+
+        title: null,
+
+        pane: {
+            center: ['50%', '85%'],
+            size: '140%',
+            startAngle: -90,
+            endAngle: 90,
+            background: {
+                backgroundColor:
+                    Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
+                innerRadius: '60%',
+                outerRadius: '100%',
+                shape: 'arc'
+            }
+        },
+
+        exporting: {
+            enabled: false
+        },
+
+        tooltip: {
+            enabled: false
+        },
+
+        // the value axis
+        yAxis: {
+            stops: [
+                [0.1, '#DF5353'], // red
+                [0.5, '#DDDF0D'], // yellow
+                [0.9, '#f69c49'], // orange
+                [1, '#55BF3B'],   // green
+            ],
+            lineWidth: 0,
+            tickWidth: 0,
+            minorTickInterval: null,
+            tickAmount: 2,
+            title: {
+                y: -70
+            },
+            labels: {
+                y: 16
+            }
+        },
+
+        plotOptions: {
+            solidgauge: {
+                dataLabels: {
+                    y: 5,
+                    borderWidth: 0,
+                    useHTML: true
+                }
+            }
+        }
+    };
+
+    $('#charIndexTotalRevenue').show();
+
+    var chartSpeed = Highcharts.chart('containerIndexTotalRevenue', Highcharts.merge(gaugeOptions, {
+        yAxis: {
+            min: 0,
+            max: operating_expenses,
+            title: {
+                text: 'Revenue'
+            }
+        },
+
+        credits: {
+            enabled: false
+        },
+
+        series: [{
+            name: 'Revenue',
+            data: [total_revenue],
+            dataLabels: {
+                format:
+                    '<div style="text-align:center">' +
+                    '<span style="font-size:25px">{y}</span><br/>' +
+                    '<span style="font-size:12px;opacity:0.4">MXN</span>' +
+                    '</div>'
+            },
+            tooltip: {
+                valueSuffix: ' MXN'
+            }
+        }]
+
+    }));
 }
 
 /**

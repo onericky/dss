@@ -39,9 +39,10 @@ class DashboardController < ApplicationController
 
         base_time = 8
         base_cost = 20
-        @variable_cost = @var_w[:w2_marketing].to_f
-        @fixed_cost = @var_w[:w2_payroll].to_f + @var_w[:w2_infrastructure].to_f
-        operating_expenses = @fixed_cost + @variable_cost
+        variable_cost = @var_w[:w2_marketing].to_f
+        fixed_cost = @var_w[:w2_payroll].to_f + @var_w[:w2_infrastructure].to_f
+        operating_expenses = (fixed_cost + variable_cost).round(2)
+        total_sum_revenue = 0
 
         mZone = Zone.new
         @zones = mZone.getZones()
@@ -63,6 +64,7 @@ class DashboardController < ApplicationController
         # SIMULATION
         while i < @max  do
           vehicle = getVehicle
+          base_cost = getVehicleDeliveryCost(vehicle)
           @zone_and_order_type = getZoneAndOrderType
 
           order_type_cost = getOrderTypeCost(@zone_and_order_type[:orderType])
@@ -80,6 +82,7 @@ class DashboardController < ApplicationController
           pay = ((base_cost + (base_cost * order_type_cost) + (base_cost * zone_cost) + (base_cost * vehicle_cost) + risk_cost + weather_cost) * discount).round(2)
           time = (base_time + (base_time * order_type_time) + (base_time * traffic) + (base_time * zone_time) + (base_time * vehicle_time) + weather_cost).round(2)
           revenue = getRevenue(pay)
+          total_sum_revenue += revenue
 
           array_result[i] = ['cost' => pay, 'time' => time, 'revenue' => revenue, 'vehicle' => vehicle, 'zone' => @zone_and_order_type[:zone], 'orderType' => @zone_and_order_type[:orderType]]
           setCostVehicle(vehicle, pay)
@@ -112,10 +115,11 @@ class DashboardController < ApplicationController
         times = times.first(-1)
 
         id_week = getIdWeek(date)
+        total_revenue = getRevenue(total_sum_revenue).round(2)
         # guardar modelo con rollback
 
         # render "index", 'id_week': @id_week, 'date': @date
-        render json: {'ok': true, 'arrayResult': array_result}
+        render json: {'ok': true, 'arrayResult': array_result, 'operating_expenses': operating_expenses, 'total_revenue': total_revenue}
     end
   end
 
@@ -150,6 +154,17 @@ class DashboardController < ApplicationController
     max = number.key(number.values.max)
 
     return max
+  end
+
+  def getVehicleDeliveryCost(vehicle)
+    case vehicle
+    when 'bike'
+      return @var_w[:w1_bike].to_f
+    when 'moto'
+      return @var_w[:w1_moto].to_f
+    when 'car'
+      return @var_w[:w1_car].to_f
+    end
   end
 
   def getZoneAndOrderType
@@ -234,11 +249,11 @@ class DashboardController < ApplicationController
   def getVehicleCost(vehicle)
     case vehicle
     when 'bike'
-      return 0.15
+      return 0.10
     when 'moto'
-      return 0.20
+      return 0.15
     when 'car'
-      return 0.20
+      return 0.25
     end
   end
 

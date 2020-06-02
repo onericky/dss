@@ -25,7 +25,8 @@
 }
 
 .nav-main {
-    float: right !important;
+    margin-left: 16.66% !important;
+    /*float: right !important;*/
 }
 
 .sidenav {
@@ -52,6 +53,10 @@
 .circle {
     width: 100px !important;
     height: 100px !important;
+}
+
+.btn-simulate {
+    float: right !important;
 }
 
 i.icon-white {
