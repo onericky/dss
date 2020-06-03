@@ -89,7 +89,6 @@ $(document).ready(function(){
             success: function(response) {
                 setTimeout(function() {
                     preloader(false);
-                    console.log(response);
                     chars(response);
                     }, 3000);
             }, error: function (e) {
@@ -476,7 +475,7 @@ $(document).ready(function(){
 });
 
 /**
- * Validate input valiues
+ * Validate input values
  *
  * @param date
  * @param z1
@@ -484,6 +483,12 @@ $(document).ready(function(){
  * @param x1_bike
  * @param x1_moto
  * @param x1_car
+ * @param w1_bike
+ * @param w1_moto
+ * @param w1_car
+ * @param w2_payroll
+ * @param w2_infrastructure
+ * @param w2_marketing
  * @returns {number}
  */
 function validateVariables(date, z1, z2, x1_bike, x1_moto, x1_car, w1_bike, w1_moto, w1_car, w2_payroll, w2_infrastructure, w2_marketing) {
@@ -567,6 +572,7 @@ function preloader(show) {
  * @param dataResult
  */
 function chars(dataResult) {
+    console.log(dataResult.arrayResult);
     charDeliveryTime(dataResult.arrayResult);
     charRevenue(dataResult.arrayResult);
     charQuantity(dataResult.arrayResult);
@@ -750,6 +756,8 @@ function charQuantity(dataResult) {
             },
             allowDecimals: true
         },
+
+
 
         series: [{
             type: 'column',

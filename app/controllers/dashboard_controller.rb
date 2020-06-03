@@ -1,7 +1,5 @@
 class DashboardController < ApplicationController
 
-  @simulation = Hash.new
-
   def index
     mTT = TableTest.new
 
@@ -10,7 +8,7 @@ class DashboardController < ApplicationController
     @yes = "Si"
   end
 
-  def ies
+  def eis
 
   end
 
@@ -47,19 +45,27 @@ class DashboardController < ApplicationController
         mZone = Zone.new
         @zones = mZone.getZones()
 
-        # @zones.each do |zn|
-        #   @zn = zn.zoneName
-        # end
-
-        array_result =  Hash.new
-
-        array_result_total =  Hash.new
+        array_result = Hash.new
         categories = ""
 
-        @array_vehicle_cost =  Hash.new
-        @array_vehicle_cost['bike'] = 0
-        @array_vehicle_cost['moto'] = 0
-        @array_vehicle_cost['car'] = 0
+        @array_vehicle_cost_bike = Hash.new
+        @array_vehicle_cost_moto = Hash.new
+        @array_vehicle_cost_car = Hash.new
+
+        @array_vehicle_cost_bike['cost'] = 0
+        @array_vehicle_cost_bike['cost_total'] = 0
+        @array_vehicle_cost_bike['time'] = 0
+        @array_vehicle_cost_bike['count'] = 0
+
+        @array_vehicle_cost_moto['cost'] = 0
+        @array_vehicle_cost_moto['cost_total'] = 0
+        @array_vehicle_cost_moto['time'] = 0
+        @array_vehicle_cost_moto['count'] = 0
+
+        @array_vehicle_cost_car['cost'] = 0
+        @array_vehicle_cost_car['cost_total'] = 0
+        @array_vehicle_cost_car['time'] = 0
+        @array_vehicle_cost_car['count'] = 0
 
         # SIMULATION
         while i < @max  do
@@ -79,22 +85,24 @@ class DashboardController < ApplicationController
           traffic = getTrafficTime(@var_z[:z2].to_i)
           zone_time = getZoneTime(@zone_and_order_type[:zone])
 
-          pay = ((base_cost + (base_cost * order_type_cost) + (base_cost * zone_cost) + (base_cost * vehicle_cost) + risk_cost + weather_cost) * discount).round(2)
+          pay = ((base_cost + (base_cost * order_type_cost) + (base_cost * zone_cost) + (base_cost * vehicle_cost) + risk_cost + weather_cost)).round(2)
+          cost_total = pay
+          pay = (pay * discount).round(2)
+
           time = (base_time + (base_time * order_type_time) + (base_time * traffic) + (base_time * zone_time) + (base_time * vehicle_time) + weather_cost).round(2)
+
+          # save in array
+          setCostTimeVehicle(vehicle, pay, cost_total, time)
+
           revenue = getRevenue(pay)
           total_sum_revenue += revenue
 
-          array_result[i] = ['cost' => pay, 'time' => time, 'revenue' => revenue, 'vehicle' => vehicle, 'zone' => @zone_and_order_type[:zone], 'orderType' => @zone_and_order_type[:orderType]]
-          setCostVehicle(vehicle, pay)
+          array_result[i] = ['cost' => pay, 'cost_after_discount' => cost_total, 'time' => time, 'revenue' => revenue, 'vehicle' => vehicle, 'zone' => @zone_and_order_type[:zone], 'orderType' => @zone_and_order_type[:orderType]]
 
           i +=1
           categories += "order" + i.to_s + ","
         end
 
-        # array_result_total = 0;
-
-        data = ""
-        times = ""
 
         array_result.each do |index, data_array|
           data_array.each do |row_array|
@@ -102,7 +110,7 @@ class DashboardController < ApplicationController
               if(key == 'pay')
                 data += value.to_s + ','
               else
-                if(key == 'time')
+                if(key == 'pay_a_dis')
                   times += value.to_s + ','
                 end
               end
@@ -110,17 +118,73 @@ class DashboardController < ApplicationController
           end
         end
 
-        categories = categories.first(-1)
-        data = data.first(-1)
-        times = times.first(-1)
-
         id_week = getIdWeek(date)
         total_revenue = getRevenue(total_sum_revenue).round(2)
-        # guardar modelo con rollback
+
+        # save to DB
+        saveExpensesByWeek(id_week)
+        saveDeliveryByWeek(id_week)
+        saveHistorical(id_week)
 
         # render "index", 'id_week': @id_week, 'date': @date
         render json: {'ok': true, 'arrayResult': array_result, 'operating_expenses': operating_expenses, 'total_revenue': total_revenue}
     end
+  end
+
+  def saveExpensesByWeek(id_week)
+    m_expenses_week = ExpenseByWeek.new
+    m_expenses_week.setExpenses(id_week, @var_w[:w2_payroll].to_f, @var_w[:w2_infrastructure].to_f, @var_w[:w2_marketing].to_f)
+  end
+
+  def saveDeliveryByWeek(id_week)
+    m_delivery_week = DeliveryByWeek.new
+    avg_cost = (@array_vehicle_cost_bike['cost_total'] / @array_vehicle_cost_bike['count']).round(2)
+    avg_time = (@array_vehicle_cost_bike['time'] / @array_vehicle_cost_bike['count']).round(2)
+    @id_delivery_week_bike = m_delivery_week.setDelivery(id_week, 1, @array_vehicle_cost_bike['count'], avg_cost, avg_time)
+
+    m_delivery_week = DeliveryByWeek.new
+    avg_cost = (@array_vehicle_cost_moto['cost_total'] / @array_vehicle_cost_moto['count']).round(2)
+    avg_time = (@array_vehicle_cost_moto['time'] / @array_vehicle_cost_moto['count']).round(2)
+    @id_delivery_week_moto = m_delivery_week.setDelivery(id_week, 2, @array_vehicle_cost_moto['count'], avg_cost, avg_time)
+
+    m_delivery_week = DeliveryByWeek.new
+    avg_cost = (@array_vehicle_cost_car['cost_total'] / @array_vehicle_cost_car['count']).round(2)
+    avg_time = (@array_vehicle_cost_car['time'] / @array_vehicle_cost_car['count']).round(2)
+    @id_delivery_week_car = m_delivery_week.setDelivery(id_week, 3, @array_vehicle_cost_car['count'], avg_cost, avg_time)
+  end
+
+  def saveHistorical(id_week)
+    id_weather = getIdWeather
+    expenses = (@var_w[:w2_payroll].to_f + @var_w[:w2_infrastructure].to_f + @var_w[:w2_marketing].to_f).round(2)
+    @array_vehicle_cost_bike['cost'] = @array_vehicle_cost_bike['cost'].round(2)
+    @array_vehicle_cost_bike['cost_total'] = @array_vehicle_cost_bike['cost_total'].round(2)
+    @array_vehicle_cost_moto['cost'] = @array_vehicle_cost_moto['cost'].round(2)
+    @array_vehicle_cost_moto['cost_total'] = @array_vehicle_cost_moto['cost_total'].round(2)
+    @array_vehicle_cost_car['cost'] = @array_vehicle_cost_car['cost'].round(2)
+    @array_vehicle_cost_car['cost_total'] = @array_vehicle_cost_car['cost_total'].round(2)
+
+    m_historical = VHistoricalOrdersByWeek.new
+
+    m_historical.setHistorical(id_week, 1, 1, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_bike, expenses, @var_x[:x2].to_f, @array_vehicle_cost_bike['count'], @array_vehicle_cost_bike['cost'], @array_vehicle_cost_bike['cost_total'])
+    m_historical.setHistorical(id_week, 1, 2, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_bike, expenses, @var_x[:x2].to_f, @array_vehicle_cost_bike['count'], @array_vehicle_cost_bike['cost'], @array_vehicle_cost_bike['cost_total'])
+    m_historical.setHistorical(id_week, 1, 3, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_bike, expenses, @var_x[:x2].to_f, @array_vehicle_cost_bike['count'], @array_vehicle_cost_bike['cost'], @array_vehicle_cost_bike['cost_total'])
+    m_historical.setHistorical(id_week, 2, 1, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_bike, expenses, @var_x[:x2].to_f, @array_vehicle_cost_bike['count'], @array_vehicle_cost_bike['cost'], @array_vehicle_cost_bike['cost_total'])
+    m_historical.setHistorical(id_week, 2, 2, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_bike, expenses, @var_x[:x2].to_f, @array_vehicle_cost_bike['count'], @array_vehicle_cost_bike['cost'], @array_vehicle_cost_bike['cost_total'])
+    m_historical.setHistorical(id_week, 2, 3, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_bike, expenses, @var_x[:x2].to_f, @array_vehicle_cost_bike['count'], @array_vehicle_cost_bike['cost'], @array_vehicle_cost_bike['cost_total'])
+
+    m_historical.setHistorical(id_week, 1, 1, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_moto, expenses, @var_x[:x2].to_f, @array_vehicle_cost_moto['count'], @array_vehicle_cost_moto['cost'], @array_vehicle_cost_moto['cost_total'])
+    m_historical.setHistorical(id_week, 1, 2, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_moto, expenses, @var_x[:x2].to_f, @array_vehicle_cost_moto['count'], @array_vehicle_cost_moto['cost'], @array_vehicle_cost_moto['cost_total'])
+    m_historical.setHistorical(id_week, 1, 3, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_moto, expenses, @var_x[:x2].to_f, @array_vehicle_cost_moto['count'], @array_vehicle_cost_moto['cost'], @array_vehicle_cost_moto['cost_total'])
+    m_historical.setHistorical(id_week, 2, 1, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_moto, expenses, @var_x[:x2].to_f, @array_vehicle_cost_moto['count'], @array_vehicle_cost_moto['cost'], @array_vehicle_cost_moto['cost_total'])
+    m_historical.setHistorical(id_week, 2, 2, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_moto, expenses, @var_x[:x2].to_f, @array_vehicle_cost_moto['count'], @array_vehicle_cost_moto['cost'], @array_vehicle_cost_moto['cost_total'])
+    m_historical.setHistorical(id_week, 2, 3, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_moto, expenses, @var_x[:x2].to_f, @array_vehicle_cost_moto['count'], @array_vehicle_cost_moto['cost'], @array_vehicle_cost_moto['cost_total'])
+
+    m_historical.setHistorical(id_week, 1, 1, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_car, expenses, @var_x[:x2].to_f, @array_vehicle_cost_car['count'], @array_vehicle_cost_car['cost'], @array_vehicle_cost_car['cost_total'])
+    m_historical.setHistorical(id_week, 1, 2, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_car, expenses, @var_x[:x2].to_f, @array_vehicle_cost_car['count'], @array_vehicle_cost_car['cost'], @array_vehicle_cost_car['cost_total'])
+    m_historical.setHistorical(id_week, 1, 3, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_car, expenses, @var_x[:x2].to_f, @array_vehicle_cost_car['count'], @array_vehicle_cost_car['cost'], @array_vehicle_cost_car['cost_total'])
+    m_historical.setHistorical(id_week, 2, 1, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_car, expenses, @var_x[:x2].to_f, @array_vehicle_cost_car['count'], @array_vehicle_cost_car['cost'], @array_vehicle_cost_car['cost_total'])
+    m_historical.setHistorical(id_week, 2, 2, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_car, expenses, @var_x[:x2].to_f, @array_vehicle_cost_car['count'], @array_vehicle_cost_car['cost'], @array_vehicle_cost_car['cost_total'])
+    m_historical.setHistorical(id_week, 2, 3, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_car, expenses, @var_x[:x2].to_f, @array_vehicle_cost_car['count'], @array_vehicle_cost_car['cost'], @array_vehicle_cost_car['cost_total'])
   end
 
   def getIdWeek(date)
@@ -199,14 +263,23 @@ class DashboardController < ApplicationController
     end
   end
 
-  def setCostVehicle(type, cost)
+  def setCostTimeVehicle(type, cost, cost_total, time)
     case type
     when 'bike'
-      @array_vehicle_cost['bike'] += cost
+      @array_vehicle_cost_bike['cost'] += cost
+      @array_vehicle_cost_bike['cost_total'] += cost_total
+      @array_vehicle_cost_bike['time'] += time
+      @array_vehicle_cost_bike['count'] += 1
     when 'moto'
-      @array_vehicle_cost['moto'] += cost
+      @array_vehicle_cost_moto['cost'] += cost
+      @array_vehicle_cost_moto['cost_total'] += cost_total
+      @array_vehicle_cost_moto['time'] += time
+      @array_vehicle_cost_moto['count'] += 1
     when 'car'
-      @array_vehicle_cost['car'] += cost
+      @array_vehicle_cost_car['cost'] = cost
+      @array_vehicle_cost_car['cost_total'] += cost_total
+      @array_vehicle_cost_car['time'] += time
+      @array_vehicle_cost_car['count'] += 1
     end
   end
 
@@ -304,6 +377,14 @@ class DashboardController < ApplicationController
       return 0.9
     when 'C'
       return  1.6
+    end
+  end
+
+  def getIdWeather
+    if(@var_z[:z3] == 'true')
+      return 1
+    else
+      return 2
     end
   end
 

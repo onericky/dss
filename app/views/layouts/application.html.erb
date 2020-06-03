@@ -18,7 +18,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <script type="text/javascript">
-        window.onload = function() {
+        $(document).ready(function() {
+            console.log('listo calixto');
             var elems  = document.querySelectorAll("input[type=range]");
             M.Range.init(elems);
 
@@ -36,7 +37,7 @@
                     else
                         return true;
                 }});
-        };
+        });
     </script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
@@ -55,8 +56,8 @@
             <a href="#" class="brand-logo right"><img class="logo" src="/assets/logo.png"></a>
             <ul id="nav-mobile" class="left hide-on-med-and-down">
               <li><a href="#" data-activates="mobile-demo" class="button-collapse show-on-large sidenav-trigger" data-target="slide-out"><i class="material-icons">menu</i></a></li>
-              <li><a href="/dashboard/index">DSS</a></li>
-              <li><a href="/dashboard/ies">IES</a></li>
+              <li><a href="javascript:window.location.href='http://localhost:3000/dashboard/index'">DSS</a></li>
+              <li><a href="javascript:window.location.href='http://localhost:3000/dashboard/eis'">EIS</a></li>
               <li><a href="/dashboard/documentation">Documentation</a></li>
               <li><a href="/dashboard/about">About us</a></li>
               <li><a href="/dashboard/help"><i class="material-icons icon-white">help_outline</i></a></li>
@@ -159,19 +160,19 @@
                     <div>
                       <p>
                         <label>
-                          <input type="checkbox" id="x1-bike" class="filled-in" />
+                          <input type="checkbox" id="x1-bike" class="filled-in" checked/>
                           <span class="black-text"><i class="material-icons">directions_bike</i> Bike</span>
                         </label>
                       </p>
                       <p>
                         <label>
-                          <input type="checkbox" id="x1-moto" class="filled-in" />
+                          <input type="checkbox" id="x1-moto" class="filled-in" checked/>
                           <span class="black-text"><i class="material-icons">motorcycle</i> Motorbike</span>
                         </label>
                       </p>
                       <p>
                         <label>
-                          <input type="checkbox" id="x1-car" class="filled-in" />
+                          <input type="checkbox" id="x1-car" class="filled-in" checked/>
                           <span class="black-text"><i class="material-icons">directions_car</i> Car</span>
                         </label>
                       </p>

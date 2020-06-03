@@ -9,22 +9,39 @@
 <!--<script src="http://code.highcharts.com/modules/series-label.js"></script>-->
 <!--<script src="http://code.highcharts.com/modules/data.js"></script>-->
 
+<script>
+    $(document).ready(function() {
+
+    });
+</script>
+
+<div class="row">
+  <div class="col s12 m12 ">
+    <div class="col s2 m2 right-dss">
+      <a id="simulate-dss" class="waves-effect waves-light btn pink darken-4"><i class="material-icons left">search</i>ACCEPT</a>
+    </div>
+<!--    <div class="col s1 m1 right-dss">-->
+<!--      <div class="input-field">-->
+<!--        <input type="text" id="date-end" class="datepicker" required aria-required="true" value="2020-06-06">-->
+<!--        <label for="date-start">Date End</label>-->
+<!--      </div>-->
+<!--    </div>-->
+    <div class="col s1 m1 right-dss">
+      <div class="input-field">
+        <input type="text" id="date-start" class="datepicker" required aria-required="true" value="2020-05-31">
+        <label for="date-start">Date</label>
+      </div>
+    </div>
+  </div>
+</div>
+
 <%= "max" %>
 <%= @max %>
-<%= "vehiculo" %>
-<%= @test_vehi_per %>
-<%= "pay" %>
-<%= debug @pay %>
-<%= "****************** " %>
 
 <div class="row">
   <div class="col s12 m12">
     <figure class="highcharts-figure">
       <div id="container1"></div>
-      <p class="highcharts-description">
-        Chart showing stacked horizontal bars. This type of visualization is
-        great for comparing data that accumulates up to a sum.
-      </p>
     </figure>
   </div>
 </div>
@@ -33,12 +50,6 @@
   <div class="col s12 m12">
     <figure class="highcharts-figure">
       <div id="container2"></div>
-      <p class="highcharts-description">
-        Charts can be styled using CSS, such as this example overriding
-        the default styles for a pie chart. This can be done without the
-        use of Javascript, allowing designers and developers to better
-        collaborate on chart design.
-      </p>
     </figure>
   </div>
 </div>
@@ -47,11 +58,6 @@
   <div class="col s12 m12">
     <figure class="highcharts-figure">
       <div id="container3"></div>
-      <p class="highcharts-description">
-        Chart showing browser market shares. Clicking on individual columns
-        brings up more detailed data. This chart makes use of the drilldown
-        feature in Highcharts to easily switch between datasets.
-      </p>
     </figure>
   </div>
 </div>
