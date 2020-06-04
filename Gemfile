@@ -55,8 +55,8 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # gem 'tiny_tds'
-# gem 'tiny_tds', "~> 2.1.2"
-gem 'tiny_tds', '~> 2.1.3.pre'
+gem 'tiny_tds', "~> 2.1.2", :git => "https://github.com/rails-sqlserver/tiny_tds.git"
+# gem 'tiny_tds', '~> 2.1.3.pre'
 # gem 'tiny_tds', "~> 2.1.3.pre"
 # gem 'activerecord-sqlserver-adapter', :git => "https://github.com/rails-sqlserver/activerecord-sqlserver-adapter.git"
 gem 'activerecord-sqlserver-adapter', '~> 6.0.0.rc2'

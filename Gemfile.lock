@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/SciRuby/daru-view
-  revision: 7662fae07a2f339d9600c1dda263b8e409fc5592
+  revision: a7fce46f13a2e5cee493e36466708f4f08d05712
   specs:
     daru-view (0.2.5)
       actionview
@@ -10,6 +10,12 @@ GIT
       lazy_high_charts
       nyaplot
       thor
+
+GIT
+  remote: https://github.com/rails-sqlserver/tiny_tds.git
+  revision: 2a846b937d6cddfaf96b82227d14496f450e74ec
+  specs:
+    tiny_tds (2.1.2)
 
 GEM
   remote: https://rubygems.org/
@@ -91,14 +97,13 @@ GEM
     childprocess (3.0.0)
     concurrent-ruby (1.1.6)
     crass (1.0.6)
-    daru (0.2.2)
-      backports
-      packable (~> 1.3.9)
+    daru (0.3)
+      packable (~> 1.3.13)
     daru-data_tables (0.3.5)
       daru
     erubi (1.9.0)
-    ffi (1.12.2)
-    ffi (1.12.2-x64-mingw32)
+    ffi (1.13.0)
+    ffi (1.13.0-x64-mingw32)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     google_visualr (2.5.1)
@@ -203,8 +208,6 @@ GEM
     thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
-    tiny_tds (2.1.3.pre)
-    tiny_tds (2.1.3.pre-x64-mingw32)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -217,7 +220,7 @@ GEM
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
-    webdrivers (4.3.0)
+    webdrivers (4.4.1)
       nokogiri (~> 1.6)
       rubyzip (>= 1.3.0)
       selenium-webdriver (>= 3.0, < 4.0)
@@ -227,7 +230,7 @@ GEM
       railties (>= 4.2)
     websocket-driver (0.7.2)
       websocket-extensions (>= 0.1.0)
-    websocket-extensions (0.1.4)
+    websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.3.0)
@@ -250,7 +253,7 @@ DEPENDENCIES
   selenium-webdriver
   spring
   spring-watcher-listen (~> 2.0.0)
-  tiny_tds (~> 2.1.3.pre)
+  tiny_tds (~> 2.1.2)!
   turbolinks (~> 5)
   tzinfo-data
   web-console (>= 3.3.0)
@@ -261,4 +264,4 @@ RUBY VERSION
    ruby 2.5.3p105
 
 BUNDLED WITH
-   1.17.2
+   2.1.4
