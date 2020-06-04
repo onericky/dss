@@ -6,6 +6,12 @@ class DashboardController < ApplicationController
   def eis
   end
 
+  def about
+  end
+
+  def help
+  end
+
   def documentation
     pdf_filename = File.join(Rails.root, "app/assets/pdf/sample.pdf")
     send_file(pdf_filename, :filename => "document.pdf", :disposition => 'inline', :type => "application/pdf")
@@ -31,9 +37,14 @@ class DashboardController < ApplicationController
         revenue = m_historical.getRevenues(id_week)
         orders_zones = m_historical.getOrdersByZone(id_week)
 
+        result = true
+        if historical.empty? || expenses.empty? || delivery.empty? || orders_zones.empty?
+          result = false
+        end
+
         array_result = ['historical' => historical, 'expenses' => expenses, 'delivery' => delivery, 'revenue' => revenue, 'orders_zones' => orders_zones]
 
-        render json: {'result': true, 'date': date, 'idWeek': id_week, 'arrayResult': array_result}
+        render json: {'result': result, 'date': date, 'idWeek': id_week, 'arrayResult': array_result}
       else
         render json: {'result': false}
       end
@@ -43,16 +54,17 @@ class DashboardController < ApplicationController
   def simulate
     case request.method_symbol
     when :post
-        date = params[:date]
-        @var_z = {:z1 => params[:z1], :z2 => params[:z2], :z3 => params[:z3]}
-        @var_x = {:x1_bike => params[:x1_bike], :x1_moto => params[:x1_moto], :x1_car => params[:x1_car], :x2 => params[:x2]}
-        @var_w = {:w1_bike => params[:w1_bike], :w1_moto => params[:w1_moto], :w1_car => params[:w1_car],
-                  :w2_payroll => params[:w2_payroll], :w2_infrastructure => params[:w2_infrastructure], :w2_marketing => params[:w2_marketing],
-                  :w3_a_quick => params[:w3_a_quick], :w3_b_quick => params[:w3_b_quick], :w3_c_quick => params[:w3_c_quick],
-                  :w3_a_standard => params[:w3_a_standard], :w3_b_standard => params[:w3_b_standard], :w3_c_standard => params[:w3_c_standard],
-                  :w4_bike => params[:w4_bike], :w4_moto => params[:w4_moto], :w4_car => params[:w4_car]}
+      date = params[:date]
+      @var_z = {:z1 => params[:z1], :z2 => params[:z2], :z3 => params[:z3]}
+      @var_x = {:x1_bike => params[:x1_bike], :x1_moto => params[:x1_moto], :x1_car => params[:x1_car], :x2 => params[:x2]}
+      @var_w = {:w1_bike => params[:w1_bike], :w1_moto => params[:w1_moto], :w1_car => params[:w1_car],
+                :w2_payroll => params[:w2_payroll], :w2_infrastructure => params[:w2_infrastructure], :w2_marketing => params[:w2_marketing],
+                :w3_a_quick => params[:w3_a_quick], :w3_b_quick => params[:w3_b_quick], :w3_c_quick => params[:w3_c_quick],
+                :w3_a_standard => params[:w3_a_standard], :w3_b_standard => params[:w3_b_standard], :w3_c_standard => params[:w3_c_standard],
+                :w4_bike => params[:w4_bike], :w4_moto => params[:w4_moto], :w4_car => params[:w4_car]}
 
-
+      id_week = getIdWeek(date)
+      if validateDate(id_week)
         i = 0
         @max = getQuantityOrders(@var_w[:w3_a_quick].to_i, @var_w[:w3_b_quick].to_i, @var_w[:w3_c_quick].to_i, @var_w[:w3_a_standard].to_i, @var_w[:w3_b_standard].to_i, @var_w[:w3_c_standard].to_i)
 
@@ -133,7 +145,6 @@ class DashboardController < ApplicationController
           categories += "order" + i.to_s + ","
         end
 
-        id_week = getIdWeek(date)
         total_revenue = total_sum_revenue.round(2)
 
         # save to DB
@@ -142,8 +153,28 @@ class DashboardController < ApplicationController
         saveHistorical(id_week)
 
         # render "index", 'id_week': @id_week, 'date': @date
-        render json: {'ok': true, 'arrayResult': array_result, 'operating_expenses': operating_expenses, 'total_revenue': total_revenue}
+        render json: {'result': true, 'arrayResult': array_result, 'operating_expenses': operating_expenses, 'total_revenue': total_revenue}
+      else
+        render json: {'result': false, 'id_week': id_week}
+      end
     end
+  end
+
+  def validateDate(id_week)
+    m_expenses_week = ExpenseByWeek.new
+    record_expenses = m_expenses_week.getExpenses(id_week)
+
+    m_delivery_week = DeliveryByWeek.new
+    record_delivery = m_delivery_week.getDelivery(id_week)
+
+    m_historical = VHistoricalOrdersByWeek.new
+    record_historical = m_historical.getHistoricalByWeek(id_week)
+
+    if record_expenses.empty? && record_delivery.empty? && record_historical.empty?
+      return true
+    end
+
+    return false
   end
 
   def saveExpensesByWeek(id_week)
@@ -153,18 +184,33 @@ class DashboardController < ApplicationController
 
   def saveDeliveryByWeek(id_week)
     m_delivery_week = DeliveryByWeek.new
-    avg_cost = (@array_vehicle_cost_bike['cost_total'] / @array_vehicle_cost_bike['count']).round(2)
-    avg_time = (@array_vehicle_cost_bike['time'] / @array_vehicle_cost_bike['count']).round(2)
+    if @array_vehicle_cost_bike['count'] <= 0
+      avg_cost = 0
+      avg_time = 0
+    else
+      avg_cost = (@array_vehicle_cost_bike['cost_total'] / @array_vehicle_cost_bike['count']).round(2)
+      avg_time = (@array_vehicle_cost_bike['time'] / @array_vehicle_cost_bike['count']).round(2)
+    end
     @id_delivery_week_bike = m_delivery_week.setDelivery(id_week, 1, @array_vehicle_cost_bike['count'], avg_cost, avg_time)
 
     m_delivery_week = DeliveryByWeek.new
-    avg_cost = (@array_vehicle_cost_moto['cost_total'] / @array_vehicle_cost_moto['count']).round(2)
-    avg_time = (@array_vehicle_cost_moto['time'] / @array_vehicle_cost_moto['count']).round(2)
+    if @array_vehicle_cost_moto['count'] <= 0
+      avg_cost = 0
+      avg_time = 0
+    else
+      avg_cost = (@array_vehicle_cost_moto['cost_total'] / @array_vehicle_cost_moto['count']).round(2)
+      avg_time = (@array_vehicle_cost_moto['time'] / @array_vehicle_cost_moto['count']).round(2)
+    end
     @id_delivery_week_moto = m_delivery_week.setDelivery(id_week, 2, @array_vehicle_cost_moto['count'], avg_cost, avg_time)
 
     m_delivery_week = DeliveryByWeek.new
-    avg_cost = (@array_vehicle_cost_car['cost_total'] / @array_vehicle_cost_car['count']).round(2)
-    avg_time = (@array_vehicle_cost_car['time'] / @array_vehicle_cost_car['count']).round(2)
+    if @array_vehicle_cost_car['count'] <= 0
+      avg_cost = 0
+      avg_time = 0
+    else
+      avg_cost = (@array_vehicle_cost_car['cost_total'] / @array_vehicle_cost_car['count']).round(2)
+      avg_time = (@array_vehicle_cost_car['time'] / @array_vehicle_cost_car['count']).round(2)
+    end
     @id_delivery_week_car = m_delivery_week.setDelivery(id_week, 3, @array_vehicle_cost_car['count'], avg_cost, avg_time)
   end
 

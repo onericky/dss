@@ -87,10 +87,15 @@ $(document).ready(function(){
                 preloader(true);
             },
             success: function(response) {
-                setTimeout(function() {
-                    preloader(false);
-                    chars(response);
+                if(response.result == true) {
+                    setTimeout(function () {
+                        preloader(false);
+                        chars(response);
                     }, 3000);
+                } else {
+                    preloader(false);
+                    M.toast({html: 'There are records with this date, choose another'});
+                }
             }, error: function (e) {
                 console.log(e);
                 console.log('error ajax')
@@ -115,10 +120,15 @@ $(document).ready(function(){
                 preloader(true);
             },
             success: function(response) {
-                setTimeout(function() {
+                if(response.result == true) {
+                    setTimeout(function () {
+                        preloader(false);
+                        charsEIS(response);
+                    }, 3000);
+                } else {
                     preloader(false);
-                    charsEIS(response);
-                }, 3000);
+                    M.toast({html: 'There is not record with this date'});
+                }
             }, error: function (e) {
                 console.log(e);
                 console.log('error ajax eis')
@@ -583,11 +593,13 @@ function validateVariables(date, z1, z2, x1_bike, x1_moto, x1_car, w1_bike, w1_m
  */
 function preloader(show) {
     if(show == true) {
+        $('#chars-dss').hide();
         $('#preloader-dss').show();
         $('#index-dss').css('opacity', '0.4');
         $('#nav-dss').css('opacity', '0.4');
         $('#sidenav-dss').css('opacity', '0.4');
     } else {
+        $('#chars-dss').show();
         $('#preloader-dss').hide();
         $('#index-dss').css('opacity', '1');
         $('#nav-dss').css('opacity', '1');
@@ -620,7 +632,12 @@ function charEISDeliveryTime(dataResult) {
                         car: dataResult[0]['delivery'][2]['timeByDelivery']}
     var timeTotal = vehiclesTime['bike'] + vehiclesTime['moto'] + vehiclesTime['car'];
 
-    var averageTime = timeTotal / 3;
+    var v = 0;
+    if(vehiclesTime['bike'] > 0) { v ++; }
+    if(vehiclesTime['moto'] > 0) { v ++; }
+    if(vehiclesTime['car'] > 0) { v ++; }
+
+    var averageTime = timeTotal / v;
 
     var vehiclesTimeArray = [
         roundDecimals(vehiclesTime['bike']),

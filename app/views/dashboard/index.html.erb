@@ -59,47 +59,41 @@
 </div>
 
 <div id="index-dss" class="row">
-  <div class="col s1 m1">
+  <div class="col s2 m2 right-dss">
+    <a id="simulate-dss" class="waves-effect waves-light btn pink darken-4"><i class="material-icons left">send</i>SIMULATE</a>
+  </div>
+  <div class="col s1 m1 right-dss">
     <div class="input-field">
       <input type="text" id="date-dss" class="datepicker" required aria-required="true" value="2020-05-31">
       <label for="date-dss">Date</label>
     </div>
   </div>
-  <div class="col s2 m2 right-dss">
-    <a id="simulate-dss" class="waves-effect waves-light btn pink darken-4"><i class="material-icons left">send</i>SIMULATE</a>
-  </div>
 </div>
 
-<div class="row" id="charIndex">
-  <figure class="highcharts-figure">
-    <div id="containerIndex"></div>
-  </figure>
-</div>
-
-<div class="row">
-  <div class="col m6 s6" id="charIndexTime">
-    <figure class="highcharts-figure">
-      <div id="containerIndexTime"></div>
-    </figure>
+<div id="chars-dss">
+  <div class="row">
+    <div class="col m6 s6" id="charIndexTime">
+      <figure class="highcharts-figure">
+        <div id="containerIndexTime"></div>
+      </figure>
+    </div>
+    <div class="col m6 s" id="charIndexRevenue">
+      <figure class="highcharts-figure">
+        <div id="containerIndexRevenue"></div>
+      </figure>
+    </div>
   </div>
 
-  <div class="col m6 s" id="charIndexRevenue">
-    <figure class="highcharts-figure">
-      <div id="containerIndexRevenue"></div>
-    </figure>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col m6 s6" id="charIndexQuantity">
-    <figure class="highcharts-figure">
-      <div id="containerIndexQuantity"></div>
-    </figure>
-  </div>
-
-  <div class="col m6 s" id="charIndexTotalRevenue">
-    <figure class="highcharts-figure">
-      <div id="containerIndexTotalRevenue"></div>
-    </figure>
+  <div class="row">
+    <div class="col m6 s6" id="charIndexQuantity">
+      <figure class="highcharts-figure">
+        <div id="containerIndexQuantity"></div>
+      </figure>
+    </div>
+    <div class="col m6 s" id="charIndexTotalRevenue">
+      <figure class="highcharts-figure">
+        <div id="containerIndexTotalRevenue"></div>
+      </figure>
+    </div>
   </div>
 </div>

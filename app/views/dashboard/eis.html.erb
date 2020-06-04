@@ -72,28 +72,47 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="col m6 s6" id="charEISTotalDeliveriesZone">
-    <figure class="highcharts-figure">
-      <div id="containerEISTotalDeliveriesZone"></div>
-    </figure>
+<div id="chars-dss">
+  <div class="row">
+    <div class="col m6 s6" id="charEISTotalDeliveriesZone">
+      <figure class="highcharts-figure">
+        <div id="containerEISTotalDeliveriesZone"></div>
+      </figure>
+    </div>
+    <div class="col m6 s6" id="charEISRevenue">
+      <figure class="highcharts-figure">
+        <div id="containerEISRevenue"></div>
+      </figure>
+    </div>
   </div>
-  <div class="col m6 s6" id="charEISRevenue">
-    <figure class="highcharts-figure">
-      <div id="containerEISRevenue"></div>
-    </figure>
+
+  <div class="row">
+    <div class="col m6 s6" id="charEISDeliveryTime">
+      <figure class="highcharts-figure">
+        <div id="containerEISDeliveryTime"></div>
+      </figure>
+    </div>
+    <div class="col m6 s6" id="charEISRevenueStatus">
+      <figure class="highcharts-figure">
+        <div id="containerEISRevenueStatus"></div>
+      </figure>
+    </div>
   </div>
 </div>
 
-<div class="row">
-  <div class="col m6 s6" id="charEISDeliveryTime">
-    <figure class="highcharts-figure">
-      <div id="containerEISDeliveryTime"></div>
-    </figure>
-  </div>
-  <div class="col m6 s6" id="charEISRevenueStatus">
-    <figure class="highcharts-figure">
-      <div id="containerEISRevenueStatus"></div>
-    </figure>
-  </div>
-</div>
+<script>
+    $(document).ready(function() {
+      $('#sidenav-dss').html('' +
+          '  <div class="row">' +
+          '    <div class="col s12 m12">' +
+          '      <div class="card pink darken-3">' +
+          '        <div class="card-content white-text">' +
+          '          <span class="card-title">Executive Information System</span>' +
+          '          <p></p>' +
+          '        </div>' +
+          '      </div>' +
+          '    </div>' +
+          '  </div>');
+      console.log('hide sidenav');
+    });
+</script>
