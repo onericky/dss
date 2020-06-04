@@ -21,4 +21,8 @@ class ExpenseByWeek < ApplicationRecord
     row.save
   end
 
+  def getExpenses(idWeek)
+    ExpenseByWeek.where(idWeek: idWeek)
+  end
+
 end

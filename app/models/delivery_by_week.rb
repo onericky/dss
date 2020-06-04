@@ -1,5 +1,7 @@
 class DeliveryByWeek < ApplicationRecord
   self.table_name = "deliveryByWeek"
+  self.primary_key = :idDeliveryByWeek
+  has_many :vHistoricalOrdersByWeek
 
   def setDelivery(idWeek, idDeliveryMethod, quantity, avgCost, avgTime)
     row = DeliveryByWeek.new
@@ -11,6 +13,10 @@ class DeliveryByWeek < ApplicationRecord
     row.save
 
     return row.idDeliveryByWeek
+  end
+
+  def getDelivery(idWeek)
+    DeliveryByWeek.where(idWeek: idWeek)
   end
 
 end

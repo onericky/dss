@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
   post 'dashboard/simulate'
+  post 'dashboard/eis_post'
   get 'dashboard/index'
   get 'dashboard/eis'
   get 'dashboard/documentation'

@@ -1,20 +1,43 @@
 class DashboardController < ApplicationController
 
   def index
-    mTT = TableTest.new
-
-    # @value = mTT.getTest()
-    # mTT.insert
-    @yes = "Si"
   end
 
   def eis
-
   end
 
   def documentation
     pdf_filename = File.join(Rails.root, "app/assets/pdf/sample.pdf")
     send_file(pdf_filename, :filename => "document.pdf", :disposition => 'inline', :type => "application/pdf")
+  end
+
+  def eis_post
+    case request.method_symbol
+    when :post
+      date = params[:date]
+
+      id_week = getIdWeek(date)
+
+      if id_week != ""
+        m_historical = VHistoricalOrdersByWeek.new
+        historical = m_historical.getHistoricalByWeek(id_week)
+
+        m_expenses_week = ExpenseByWeek.new
+        expenses = m_expenses_week.getExpenses(id_week)
+
+        m_delivery_week = DeliveryByWeek.new
+        delivery = m_delivery_week.getDelivery(id_week)
+
+        revenue = m_historical.getRevenues(id_week)
+        orders_zones = m_historical.getOrdersByZone(id_week)
+
+        array_result = ['historical' => historical, 'expenses' => expenses, 'delivery' => delivery, 'revenue' => revenue, 'orders_zones' => orders_zones]
+
+        render json: {'result': true, 'date': date, 'idWeek': id_week, 'arrayResult': array_result}
+      else
+        render json: {'result': false}
+      end
+    end
   end
 
   def simulate
@@ -32,8 +55,6 @@ class DashboardController < ApplicationController
 
         i = 0
         @max = getQuantityOrders(@var_w[:w3_a_quick].to_i, @var_w[:w3_b_quick].to_i, @var_w[:w3_c_quick].to_i, @var_w[:w3_a_standard].to_i, @var_w[:w3_b_standard].to_i, @var_w[:w3_c_standard].to_i)
-        # @max = 120 + rand(31)
-        # total de órdenes sumas todas w3
 
         base_time = 8
         base_cost = 20
@@ -56,16 +77,25 @@ class DashboardController < ApplicationController
         @array_vehicle_cost_bike['cost_total'] = 0
         @array_vehicle_cost_bike['time'] = 0
         @array_vehicle_cost_bike['count'] = 0
+        @array_vehicle_cost_bike['count_a'] = 0
+        @array_vehicle_cost_bike['count_b'] = 0
+        @array_vehicle_cost_bike['count_c'] = 0
 
         @array_vehicle_cost_moto['cost'] = 0
         @array_vehicle_cost_moto['cost_total'] = 0
         @array_vehicle_cost_moto['time'] = 0
         @array_vehicle_cost_moto['count'] = 0
+        @array_vehicle_cost_moto['count_a'] = 0
+        @array_vehicle_cost_moto['count_b'] = 0
+        @array_vehicle_cost_moto['count_c'] = 0
 
         @array_vehicle_cost_car['cost'] = 0
         @array_vehicle_cost_car['cost_total'] = 0
         @array_vehicle_cost_car['time'] = 0
         @array_vehicle_cost_car['count'] = 0
+        @array_vehicle_cost_car['count_a'] = 0
+        @array_vehicle_cost_car['count_b'] = 0
+        @array_vehicle_cost_car['count_c'] = 0
 
         # SIMULATION
         while i < @max  do
@@ -86,40 +116,25 @@ class DashboardController < ApplicationController
           zone_time = getZoneTime(@zone_and_order_type[:zone])
 
           pay = ((base_cost + (base_cost * order_type_cost) + (base_cost * zone_cost) + (base_cost * vehicle_cost) + risk_cost + weather_cost)).round(2)
-          cost_total = pay
+          cost_normal = pay
           pay = (pay * discount).round(2)
 
           time = (base_time + (base_time * order_type_time) + (base_time * traffic) + (base_time * zone_time) + (base_time * vehicle_time) + weather_cost).round(2)
 
           # save in array
-          setCostTimeVehicle(vehicle, pay, cost_total, time)
+          setCostTimeVehicle(vehicle, cost_normal, pay, time, @zone_and_order_type[:zone])
 
           revenue = getRevenue(pay)
           total_sum_revenue += revenue
 
-          array_result[i] = ['cost' => pay, 'cost_after_discount' => cost_total, 'time' => time, 'revenue' => revenue, 'vehicle' => vehicle, 'zone' => @zone_and_order_type[:zone], 'orderType' => @zone_and_order_type[:orderType]]
+          array_result[i] = ['cost_normal' => cost_normal, 'cost_after_discount' => pay, 'time' => time, 'revenue' => revenue, 'vehicle' => vehicle, 'zone' => @zone_and_order_type[:zone], 'orderType' => @zone_and_order_type[:orderType]]
 
           i +=1
           categories += "order" + i.to_s + ","
         end
 
-
-        array_result.each do |index, data_array|
-          data_array.each do |row_array|
-            row_array.each do |key, value|
-              if(key == 'pay')
-                data += value.to_s + ','
-              else
-                if(key == 'pay_a_dis')
-                  times += value.to_s + ','
-                end
-              end
-            end
-          end
-        end
-
         id_week = getIdWeek(date)
-        total_revenue = getRevenue(total_sum_revenue).round(2)
+        total_revenue = total_sum_revenue.round(2)
 
         # save to DB
         saveExpensesByWeek(id_week)
@@ -165,31 +180,37 @@ class DashboardController < ApplicationController
 
     m_historical = VHistoricalOrdersByWeek.new
 
-    m_historical.setHistorical(id_week, 1, 1, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_bike, expenses, @var_x[:x2].to_f, @array_vehicle_cost_bike['count'], @array_vehicle_cost_bike['cost'], @array_vehicle_cost_bike['cost_total'])
-    m_historical.setHistorical(id_week, 1, 2, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_bike, expenses, @var_x[:x2].to_f, @array_vehicle_cost_bike['count'], @array_vehicle_cost_bike['cost'], @array_vehicle_cost_bike['cost_total'])
-    m_historical.setHistorical(id_week, 1, 3, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_bike, expenses, @var_x[:x2].to_f, @array_vehicle_cost_bike['count'], @array_vehicle_cost_bike['cost'], @array_vehicle_cost_bike['cost_total'])
-    m_historical.setHistorical(id_week, 2, 1, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_bike, expenses, @var_x[:x2].to_f, @array_vehicle_cost_bike['count'], @array_vehicle_cost_bike['cost'], @array_vehicle_cost_bike['cost_total'])
-    m_historical.setHistorical(id_week, 2, 2, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_bike, expenses, @var_x[:x2].to_f, @array_vehicle_cost_bike['count'], @array_vehicle_cost_bike['cost'], @array_vehicle_cost_bike['cost_total'])
-    m_historical.setHistorical(id_week, 2, 3, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_bike, expenses, @var_x[:x2].to_f, @array_vehicle_cost_bike['count'], @array_vehicle_cost_bike['cost'], @array_vehicle_cost_bike['cost_total'])
+    m_historical.setHistorical(id_week, 1, 1, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_bike, expenses, @var_x[:x2].to_f, @array_vehicle_cost_bike['count_a'], @array_vehicle_cost_bike['cost'], @array_vehicle_cost_bike['cost_total'])
+    m_historical.setHistorical(id_week, 1, 2, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_bike, expenses, @var_x[:x2].to_f, @array_vehicle_cost_bike['count_b'], @array_vehicle_cost_bike['cost'], @array_vehicle_cost_bike['cost_total'])
+    m_historical.setHistorical(id_week, 1, 3, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_bike, expenses, @var_x[:x2].to_f, @array_vehicle_cost_bike['count_c'], @array_vehicle_cost_bike['cost'], @array_vehicle_cost_bike['cost_total'])
+    m_historical.setHistorical(id_week, 2, 1, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_bike, expenses, @var_x[:x2].to_f, @array_vehicle_cost_bike['count_a'], @array_vehicle_cost_bike['cost'], @array_vehicle_cost_bike['cost_total'])
+    m_historical.setHistorical(id_week, 2, 2, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_bike, expenses, @var_x[:x2].to_f, @array_vehicle_cost_bike['count_b'], @array_vehicle_cost_bike['cost'], @array_vehicle_cost_bike['cost_total'])
+    m_historical.setHistorical(id_week, 2, 3, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_bike, expenses, @var_x[:x2].to_f, @array_vehicle_cost_bike['count_c'], @array_vehicle_cost_bike['cost'], @array_vehicle_cost_bike['cost_total'])
 
-    m_historical.setHistorical(id_week, 1, 1, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_moto, expenses, @var_x[:x2].to_f, @array_vehicle_cost_moto['count'], @array_vehicle_cost_moto['cost'], @array_vehicle_cost_moto['cost_total'])
-    m_historical.setHistorical(id_week, 1, 2, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_moto, expenses, @var_x[:x2].to_f, @array_vehicle_cost_moto['count'], @array_vehicle_cost_moto['cost'], @array_vehicle_cost_moto['cost_total'])
-    m_historical.setHistorical(id_week, 1, 3, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_moto, expenses, @var_x[:x2].to_f, @array_vehicle_cost_moto['count'], @array_vehicle_cost_moto['cost'], @array_vehicle_cost_moto['cost_total'])
-    m_historical.setHistorical(id_week, 2, 1, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_moto, expenses, @var_x[:x2].to_f, @array_vehicle_cost_moto['count'], @array_vehicle_cost_moto['cost'], @array_vehicle_cost_moto['cost_total'])
-    m_historical.setHistorical(id_week, 2, 2, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_moto, expenses, @var_x[:x2].to_f, @array_vehicle_cost_moto['count'], @array_vehicle_cost_moto['cost'], @array_vehicle_cost_moto['cost_total'])
-    m_historical.setHistorical(id_week, 2, 3, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_moto, expenses, @var_x[:x2].to_f, @array_vehicle_cost_moto['count'], @array_vehicle_cost_moto['cost'], @array_vehicle_cost_moto['cost_total'])
+    m_historical.setHistorical(id_week, 1, 1, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_moto, expenses, @var_x[:x2].to_f, @array_vehicle_cost_moto['count_a'], @array_vehicle_cost_moto['cost'], @array_vehicle_cost_moto['cost_total'])
+    m_historical.setHistorical(id_week, 1, 2, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_moto, expenses, @var_x[:x2].to_f, @array_vehicle_cost_moto['count_b'], @array_vehicle_cost_moto['cost'], @array_vehicle_cost_moto['cost_total'])
+    m_historical.setHistorical(id_week, 1, 3, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_moto, expenses, @var_x[:x2].to_f, @array_vehicle_cost_moto['count_c'], @array_vehicle_cost_moto['cost'], @array_vehicle_cost_moto['cost_total'])
+    m_historical.setHistorical(id_week, 2, 1, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_moto, expenses, @var_x[:x2].to_f, @array_vehicle_cost_moto['count_a'], @array_vehicle_cost_moto['cost'], @array_vehicle_cost_moto['cost_total'])
+    m_historical.setHistorical(id_week, 2, 2, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_moto, expenses, @var_x[:x2].to_f, @array_vehicle_cost_moto['count_b'], @array_vehicle_cost_moto['cost'], @array_vehicle_cost_moto['cost_total'])
+    m_historical.setHistorical(id_week, 2, 3, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_moto, expenses, @var_x[:x2].to_f, @array_vehicle_cost_moto['count_c'], @array_vehicle_cost_moto['cost'], @array_vehicle_cost_moto['cost_total'])
 
-    m_historical.setHistorical(id_week, 1, 1, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_car, expenses, @var_x[:x2].to_f, @array_vehicle_cost_car['count'], @array_vehicle_cost_car['cost'], @array_vehicle_cost_car['cost_total'])
-    m_historical.setHistorical(id_week, 1, 2, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_car, expenses, @var_x[:x2].to_f, @array_vehicle_cost_car['count'], @array_vehicle_cost_car['cost'], @array_vehicle_cost_car['cost_total'])
-    m_historical.setHistorical(id_week, 1, 3, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_car, expenses, @var_x[:x2].to_f, @array_vehicle_cost_car['count'], @array_vehicle_cost_car['cost'], @array_vehicle_cost_car['cost_total'])
-    m_historical.setHistorical(id_week, 2, 1, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_car, expenses, @var_x[:x2].to_f, @array_vehicle_cost_car['count'], @array_vehicle_cost_car['cost'], @array_vehicle_cost_car['cost_total'])
-    m_historical.setHistorical(id_week, 2, 2, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_car, expenses, @var_x[:x2].to_f, @array_vehicle_cost_car['count'], @array_vehicle_cost_car['cost'], @array_vehicle_cost_car['cost_total'])
-    m_historical.setHistorical(id_week, 2, 3, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_car, expenses, @var_x[:x2].to_f, @array_vehicle_cost_car['count'], @array_vehicle_cost_car['cost'], @array_vehicle_cost_car['cost_total'])
+    m_historical.setHistorical(id_week, 1, 1, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_car, expenses, @var_x[:x2].to_f, @array_vehicle_cost_car['count_a'], @array_vehicle_cost_car['cost'], @array_vehicle_cost_car['cost_total'])
+    m_historical.setHistorical(id_week, 1, 2, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_car, expenses, @var_x[:x2].to_f, @array_vehicle_cost_car['count_b'], @array_vehicle_cost_car['cost'], @array_vehicle_cost_car['cost_total'])
+    m_historical.setHistorical(id_week, 1, 3, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_car, expenses, @var_x[:x2].to_f, @array_vehicle_cost_car['count_c'], @array_vehicle_cost_car['cost'], @array_vehicle_cost_car['cost_total'])
+    m_historical.setHistorical(id_week, 2, 1, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_car, expenses, @var_x[:x2].to_f, @array_vehicle_cost_car['count_a'], @array_vehicle_cost_car['cost'], @array_vehicle_cost_car['cost_total'])
+    m_historical.setHistorical(id_week, 2, 2, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_car, expenses, @var_x[:x2].to_f, @array_vehicle_cost_car['count_b'], @array_vehicle_cost_car['cost'], @array_vehicle_cost_car['cost_total'])
+    m_historical.setHistorical(id_week, 2, 3, @var_z[:z1].to_i, @var_z[:z2].to_i, id_weather, @id_delivery_week_car, expenses, @var_x[:x2].to_f, @array_vehicle_cost_car['count_c'], @array_vehicle_cost_car['cost'], @array_vehicle_cost_car['cost_total'])
   end
 
   def getIdWeek(date)
     m_week = WeekReference.new
-    return m_week.getId(date)[:idWeek]
+    result = m_week.getId(date)
+
+    if(result)
+      return result[:idWeek]
+    end
+
+    return ""
   end
 
   def getRevenue(cost)
@@ -199,15 +220,15 @@ class DashboardController < ApplicationController
   def getVehicle
     rand_bike = rand_moto = rand_car = 0
 
-    if(@var_x[:x1_bike] == 'true')
+    if @var_x[:x1_bike] == 'true'
       rand_bike = 1 + rand(@var_w[:w4_bike].to_i)
     end
 
-    if(@var_x[:x1_moto] == 'true')
+    if @var_x[:x1_moto] == 'true'
       rand_moto = 1 + rand(@var_w[:w4_moto].to_i)
     end
 
-    if(@var_x[:x1_car] == 'true')
+    if @var_x[:x1_car] == 'true'
       rand_car = 1 + rand(@var_w[:w4_car].to_i)
     end
 
@@ -232,17 +253,17 @@ class DashboardController < ApplicationController
   end
 
   def getZoneAndOrderType
-    if(@var_w[:w3_a_quick].to_i > 0)
+    if @var_w[:w3_a_quick].to_i > 0
       @var_w[:w3_a_quick] = @var_w[:w3_a_quick].to_i - 1
       return {zone: 'A', orderType: 'quick'}
     end
 
-    if(@var_w[:w3_a_standard].to_i > 0)
+    if @var_w[:w3_a_standard].to_i > 0
       @var_w[:w3_a_standard] = @var_w[:w3_a_standard].to_i - 1
       return {zone: 'A', orderType: 'standard'}
     end
 
-    if(@var_w[:w3_b_quick].to_i > 0)
+    if @var_w[:w3_b_quick].to_i > 0
       @var_w[:w3_b_quick] = @var_w[:w3_b_quick].to_i - 1
       return {zone: 'B', orderType: 'quick'}
     end
@@ -252,34 +273,67 @@ class DashboardController < ApplicationController
       return {zone: 'B', orderType: 'standard'}
     end
 
-    if(@var_w[:w3_c_quick].to_i > 0)
+    if @var_w[:w3_c_quick].to_i > 0
       @var_w[:w3_c_quick] = @var_w[:w3_c_quick].to_i - 1
       return {zone: 'C', orderType: 'quick'}
     end
 
-    if(@var_w[:w3_c_standard].to_i > 0)
+    if @var_w[:w3_c_standard].to_i > 0
       @var_w[:w3_c_standard] = @var_w[:w3_c_standard].to_i - 1
       return {zone: 'C', orderType: 'standard'}
     end
   end
 
-  def setCostTimeVehicle(type, cost, cost_total, time)
+  def setCostTimeVehicle(type, cost_normal, cost_total, time, zone)
     case type
     when 'bike'
-      @array_vehicle_cost_bike['cost'] += cost
+      @array_vehicle_cost_bike['cost'] += cost_normal
       @array_vehicle_cost_bike['cost_total'] += cost_total
       @array_vehicle_cost_bike['time'] += time
       @array_vehicle_cost_bike['count'] += 1
+      if zone == 'A'
+        @array_vehicle_cost_bike['count_a'] += 1
+      end
+
+      if zone == 'B'
+        @array_vehicle_cost_bike['count_b'] += 1
+      end
+
+      if zone == 'C'
+        @array_vehicle_cost_bike['count_c'] += 1
+      end
     when 'moto'
-      @array_vehicle_cost_moto['cost'] += cost
+      @array_vehicle_cost_moto['cost'] += cost_normal
       @array_vehicle_cost_moto['cost_total'] += cost_total
       @array_vehicle_cost_moto['time'] += time
       @array_vehicle_cost_moto['count'] += 1
+      if zone == 'A'
+        @array_vehicle_cost_moto['count_a'] += 1
+      end
+
+      if zone == 'B'
+        @array_vehicle_cost_moto['count_b'] += 1
+      end
+
+      if zone == 'C'
+        @array_vehicle_cost_moto['count_c'] += 1
+      end
     when 'car'
-      @array_vehicle_cost_car['cost'] = cost
+      @array_vehicle_cost_car['cost'] += cost_normal
       @array_vehicle_cost_car['cost_total'] += cost_total
       @array_vehicle_cost_car['time'] += time
       @array_vehicle_cost_car['count'] += 1
+      if zone == 'A'
+        @array_vehicle_cost_car['count_a'] += 1
+      end
+
+      if zone == 'B'
+        @array_vehicle_cost_car['count_b'] += 1
+      end
+
+      if zone == 'C'
+        @array_vehicle_cost_car['count_c'] += 1
+      end
     end
   end
 

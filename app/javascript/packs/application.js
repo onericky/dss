@@ -79,7 +79,7 @@ $(document).ready(function(){
                     'w3_c_standard': w3_c_standard,
                     'w4_bike': w4_bike,
                     'w4_moto': w4_moto,
-                    'w4_car': w4_car,
+                    'w4_car': w4_car
             },
             dataType: "json",
             type: 'post',
@@ -96,6 +96,35 @@ $(document).ready(function(){
                 console.log('error ajax')
             }
         })
+    });
+
+    $('#eis-dss').click(function() {
+        var date = $('#date-eis').val();
+
+        if(date === "") {
+            M.toast({html: 'Date is required to filter!'});
+            return 0;
+        }
+
+        $.ajax({
+            url: '/dashboard/eis_post',
+            data: {'date': date},
+            dataType: "json",
+            type: 'post',
+            beforeSend: function () {
+                preloader(true);
+            },
+            success: function(response) {
+                setTimeout(function() {
+                    preloader(false);
+                    charsEIS(response);
+                }, 3000);
+            }, error: function (e) {
+                console.log(e);
+                console.log('error ajax eis')
+            }
+        })
+
     });
 
     // var char1 = Highcharts.chart('container1', {
@@ -572,12 +601,437 @@ function preloader(show) {
  * @param dataResult
  */
 function chars(dataResult) {
-    console.log(dataResult.arrayResult);
     charDeliveryTime(dataResult.arrayResult);
     charRevenue(dataResult.arrayResult);
     charQuantity(dataResult.arrayResult);
     charTotalRevenue(dataResult.operating_expenses, dataResult.total_revenue);
 }
+
+function charsEIS(dataResult) {
+    charEISDeliveryTime(dataResult.arrayResult);
+    charEISRevenue(dataResult.arrayResult);
+    charEISTotalDeliveriesZone(dataResult.arrayResult);
+    charEISRevenueStatus(dataResult.arrayResult);
+}
+
+function charEISDeliveryTime(dataResult) {
+    var vehiclesTime = {bike: dataResult[0]['delivery'][0]['timeByDelivery'],
+                        moto: dataResult[0]['delivery'][1]['timeByDelivery'],
+                        car: dataResult[0]['delivery'][2]['timeByDelivery']}
+    var timeTotal = vehiclesTime['bike'] + vehiclesTime['moto'] + vehiclesTime['car'];
+
+    var averageTime = timeTotal / 3;
+
+    var vehiclesTimeArray = [
+        roundDecimals(vehiclesTime['bike']),
+        roundDecimals(vehiclesTime['moto']),
+        roundDecimals(vehiclesTime['car']),
+        roundDecimals(averageTime)
+    ];
+
+    $('#charEISDeliveryTime').show();
+
+    var chart = Highcharts.chart('containerEISDeliveryTime', {
+        title: {
+            text: 'Delivery Time'
+        },
+
+        chart: {
+            inverted: true,
+            polar: false
+        },
+
+        subtitle: {
+            text: '(average)'
+        },
+
+        xAxis: {
+            title: {
+                text: 'Vechicle'
+            },
+            categories: ['bike', 'motorbike', 'car', 'average']
+        },
+
+        yAxis: {
+            title: {
+                text: 'Minutes'
+            },
+            allowDecimals: true
+        },
+
+        series: [{
+            type: 'column',
+            colorByPoint: false,
+            data: vehiclesTimeArray,
+            showInLegend: false,
+            color: '#8e24aa'
+        }]
+    });
+}
+
+function charEISRevenue(dataResult) {
+    var bike_revenue = moto_revenue = car_revenue = total_revenue = total_sales = total_expenses = 0;
+
+    $.each(dataResult[0]['expenses'], function(key, data) {
+        total_expenses += data['cost'];
+    });
+
+    $.each(dataResult[0]['revenue'], function(key, data) {
+        if(data['idDeliveryMethod'] == 1) {
+            if(bike_revenue <= 0) {
+                total_revenue += data['total_revenue'];
+                total_sales += data['total_sales'];
+            }
+
+            bike_revenue = data['total_revenue_bike'];
+        } else if(data['idDeliveryMethod'] == 2) {
+            if(moto_revenue <= 0) {
+                total_revenue += data['total_revenue'];
+                total_sales += data['total_sales'];
+            }
+
+            moto_revenue = data['total_revenue_moto'];
+        } else if(data['idDeliveryMethod'] == 3) {
+            if(car_revenue <= 0) {
+                total_revenue += data['total_revenue'];
+                total_sales += data['total_sales'];
+            }
+
+            car_revenue = data['total_revenue_car'];
+        }
+    });
+
+    bike_revenue = roundDecimals(bike_revenue);
+    moto_revenue = roundDecimals(moto_revenue);
+    car_revenue = roundDecimals(car_revenue);
+    total_revenue = roundDecimals(total_revenue);
+    total_sales = roundDecimals(total_sales);
+    total_expenses = roundDecimals(total_expenses);
+
+    $('#charEISRevenue').show();
+
+    var chart = Highcharts.chart('containerEISRevenue', {
+        title: {
+            text: 'Revenue report'
+        },
+
+        chart: {
+            type: 'pie'
+        },
+
+        tooltip: {
+            valueSuffix: ' MXN',
+            borderColor: '#8ae'
+        },
+
+        plotOptions: {
+            series: {
+                dataLabels: {
+                    enabled: true,
+                    connectorColor: '#777',
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                },
+                cursor: 'pointer',
+                borderWidth: 3
+            }
+        },
+
+        series: [{
+            name: 'Total',
+            data: [{
+                name: 'Bike',
+                y: bike_revenue,
+                color: getColorPattern(0)
+            }, {
+                name: 'Motorbike',
+                y: moto_revenue,
+                color: getColorPattern(1)
+            }, {
+                name: 'Car',
+                y: car_revenue,
+                color: getColorPattern(2)
+            }, {
+                name: 'Total revenue',
+                y: total_revenue,
+                color: getColorPattern(3)
+            }, {
+                name: 'Total expenses',
+                y: total_expenses,
+                color: getColorPattern(4)
+            }, {
+                name: 'Total sales',
+                y: total_sales,
+                color: getColorPattern(5)
+            } ]
+        }],
+
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    plotOptions: {
+                        series: {
+                            dataLabels: {
+                                format: '<b>{point.name}</b>'
+                            }
+                        }
+                    }
+                }
+            }]
+        }
+    });
+}
+
+function charEISTotalDeliveriesZone(dataResult) {
+    var a_orders = {bike: 0, moto: 0, car: 0, total: 0};
+    var b_orders = {bike: 0, moto: 0, car: 0, total: 0};
+    var c_orders = {bike: 0, moto: 0, car: 0, total: 0};
+
+    $.each(dataResult[0]['orders_zones'], function(key, data) {
+        if(data['idDeliveryMethod'] == 1) {
+            if(a_orders['bike'] <= 0) {
+                a_orders['bike'] += data['a_orders'];
+                a_orders['total'] += data['a_orders'];
+            }
+            if(b_orders['bike'] <= 0) {
+                b_orders['bike'] += data['b_orders'];
+                b_orders['total'] += data['b_orders'];
+            }
+            if(c_orders['bike'] <= 0) {
+                c_orders['bike'] += data['c_orders'];
+                c_orders['total'] += data['c_orders'];
+            }
+        } else if(data['idDeliveryMethod'] == 2) {
+            if(a_orders['moto'] <= 0) {
+                a_orders['moto'] += data['a_orders'];
+                a_orders['total'] += data['a_orders'];
+            }
+            if(b_orders['moto'] <= 0) {
+                b_orders['moto'] += data['b_orders'];
+                b_orders['total'] += data['b_orders'];
+            }
+            if(c_orders['moto'] <= 0) {
+                c_orders['moto'] += data['c_orders'];
+                c_orders['total'] += data['c_orders'];
+            }
+        } else if(data['idDeliveryMethod'] == 3) {
+            if(a_orders['car'] <= 0) {
+                a_orders['car'] += data['a_orders'];
+                a_orders['total'] += data['a_orders'];
+            }
+            if(b_orders['car'] <= 0) {
+                b_orders['car'] += data['b_orders'];
+                b_orders['total'] += data['b_orders'];
+            }
+            if(c_orders['car'] <= 0) {
+                c_orders['car'] += data['c_orders'];
+                c_orders['total'] += data['c_orders'];
+            }
+        }
+    });
+
+    var bike_array = [a_orders['bike'], b_orders['bike'], c_orders['bike']];
+    var moto_array = [a_orders['moto'], b_orders['moto'], c_orders['moto']];
+    var car_array = [a_orders['car'], b_orders['car'], c_orders['car']];
+    var total_array = [a_orders['total'], b_orders['total'], c_orders['total']];
+
+    $('#charEISTotalDeliveriesZone').show();
+
+    var chart = Highcharts.chart('containerEISTotalDeliveriesZone', {
+        chart: {
+            type: 'line'
+        },
+
+        title: {
+            text: 'Total orders by zone'
+        },
+
+        xAxis: {
+            title: {
+                text: 'Zone'
+            },
+            categories: ['A', 'B', 'C']
+        },
+
+        yAxis: {
+            title: {
+                text: 'Quantity orders'
+            }
+        },
+        plotOptions: {
+            line: {
+                dataLabels: {
+                    enabled: true
+                },
+                enableMouseTracking: false
+            }
+        },
+        series: [{
+            name: 'Bike',
+            data: bike_array
+        }, {
+            name: 'Motorbike',
+            data: moto_array
+        }, {
+            name: 'Car',
+            data: car_array
+        }, {
+            name: 'Total',
+            data: total_array
+        }]
+    });
+}
+
+function charEISRevenueStatus(dataResult) {
+    var operating_expenses = 0;
+    var total_revenue = 0;
+    var sw_1 = sw_2 = sw_3 = false;
+
+    $.each(dataResult[0]['expenses'], function(key, data) {
+        operating_expenses += data['cost'];
+    });
+
+    $.each(dataResult[0]['revenue'], function(key, data) {
+        if(data['idDeliveryMethod'] == 1) {
+            if(sw_1 == false) {
+                total_revenue += data['total_revenue'];
+                sw_1 = true;
+            }
+        } else if(data['idDeliveryMethod'] == 2) {
+            if(sw_2 == false) {
+                total_revenue += data['total_revenue'];
+                sw_2 = true;
+            }
+        } else if(data['idDeliveryMethod'] == 3) {
+            if(sw_3 == false) {
+                total_revenue += data['total_revenue'];
+                sw_3 = true;
+            }
+        }
+    });
+
+    total_revenue = roundDecimals(total_revenue);
+    operating_expenses = roundDecimals(operating_expenses);
+
+    var gaugeOptions = {
+        chart: {
+            type: 'solidgauge'
+        },
+
+        title: null,
+
+        pane: {
+            center: ['50%', '85%'],
+            size: '140%',
+            startAngle: -90,
+            endAngle: 90,
+            background: {
+                backgroundColor:
+                    Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
+                innerRadius: '60%',
+                outerRadius: '100%',
+                shape: 'arc'
+            }
+        },
+
+        exporting: {
+            enabled: false
+        },
+
+        tooltip: {
+            enabled: false
+        },
+
+        // the value axis
+        yAxis: {
+            stops: [
+                [0.1, '#DF5353'], // red
+                [0.5, '#DDDF0D'], // yellow
+                [0.9, '#f69c49'], // orange
+                [1, '#55BF3B'],   // green
+            ],
+            lineWidth: 0,
+            tickWidth: 0,
+            minorTickInterval: null,
+            tickAmount: 2,
+            title: {
+                y: -70
+            },
+            labels: {
+                y: 16
+            }
+        },
+
+        plotOptions: {
+            solidgauge: {
+                dataLabels: {
+                    y: 5,
+                    borderWidth: 0,
+                    useHTML: true
+                }
+            }
+        }
+    };
+
+    $('#charEISRevenueStatus').show();
+
+    var chartSpeed = Highcharts.chart('containerEISRevenueStatus', Highcharts.merge(gaugeOptions, {
+        yAxis: {
+            min: 0,
+            max: operating_expenses,
+            title: {
+                text: 'Revenue'
+            }
+        },
+
+        credits: {
+            enabled: false
+        },
+
+        series: [{
+            name: 'Revenue',
+            data: [total_revenue],
+            dataLabels: {
+                format:
+                    '<div style="text-align:center">' +
+                    '<span style="font-size:25px">{y}</span><br/>' +
+                    '<span style="font-size:12px;opacity:0.4">MXN</span>' +
+                    '</div>'
+            },
+            tooltip: {
+                valueSuffix: ' MXN'
+            }
+        }]
+
+    }));
+
+}
+
+function getColorPattern(i) {
+    var colors = Highcharts.getOptions().colors,
+        patternColors = [colors[2], colors[0], colors[3], colors[1], colors[4]],
+        patterns = [
+            'M 0 0 L 5 5 M 4.5 -0.5 L 5.5 0.5 M -0.5 4.5 L 0.5 5.5',
+            'M 0 5 L 5 0 M -0.5 0.5 L 0.5 -0.5 M 4.5 5.5 L 5.5 4.5',
+            'M 1.5 0 L 1.5 5 M 4 0 L 4 5',
+            'M 0 1.5 L 5 1.5 M 0 4 L 5 4',
+            'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
+            'M 1.5 0 L 2 5 M 4 0 L 0 5'
+        ];
+
+    return {
+        pattern: {
+            path: patterns[i],
+            color: patternColors[i],
+            width: 5,
+            height: 5
+        }
+    };
+}
+
+//*****************************************   CHARS DSS / INDEX   *****************************************
 
 function charDeliveryTime(dataResult) {
     var timeTotal = 0;
@@ -601,10 +1055,10 @@ function charDeliveryTime(dataResult) {
     averageTime = timeTotal / vehiclesTotal;
 
     var vehiclesTimeArray = [
-        (Math.round((vehiclesTime['bike'] + Number.EPSILON) * 100) / 100),
-        (Math.round((vehiclesTime['moto'] + Number.EPSILON) * 100) / 100),
-        (Math.round((vehiclesTime['car'] + Number.EPSILON) * 100) / 100),
-        (Math.round((averageTime + Number.EPSILON) * 100) / 100)
+        roundDecimals(vehiclesTime['bike']),
+        roundDecimals(vehiclesTime['moto']),
+        roundDecimals(vehiclesTime['car']),
+        roundDecimals(averageTime)
     ];
 
     $('#charIndexTime').show();
@@ -663,10 +1117,10 @@ function charRevenue(dataResult) {
     averageRevenue = revenueTotal / vehiclesTotal;
 
     var vehiclesRevenueArray = [
-        (Math.round((vehiclesRevenue['bike'] + Number.EPSILON) * 100) / 100),
-        (Math.round((vehiclesRevenue['moto'] + Number.EPSILON) * 100) / 100),
-        (Math.round((vehiclesRevenue['car'] + Number.EPSILON) * 100) / 100),
-        (Math.round((averageRevenue + Number.EPSILON) * 100) / 100)
+        roundDecimals(vehiclesRevenue['bike']),
+        roundDecimals(vehiclesRevenue['moto']),
+        roundDecimals(vehiclesRevenue['car']),
+        roundDecimals(averageRevenue)
     ];
 
     $('#charIndexRevenue').show();
@@ -730,10 +1184,10 @@ function charQuantity(dataResult) {
     // averageQuantity = quantityTotal / vehiclesTotal;
 
     var vehiclesQuantityArray = [
-        (Math.round((vehiclesQuantity['bike'] + Number.EPSILON) * 100) / 100),
-        (Math.round((vehiclesQuantity['moto'] + Number.EPSILON) * 100) / 100),
-        (Math.round((vehiclesQuantity['car'] + Number.EPSILON) * 100) / 100),
-        (Math.round((averageQuantity + Number.EPSILON) * 100) / 100)
+        roundDecimals(vehiclesQuantity['bike']),
+        roundDecimals(vehiclesQuantity['moto']),
+        roundDecimals(vehiclesQuantity['car']),
+        roundDecimals(averageQuantity)
     ];
 
     $('#charIndexQuantity').show();
@@ -860,6 +1314,10 @@ function charTotalRevenue(operating_expenses, total_revenue) {
         }]
 
     }));
+}
+
+function roundDecimals(number) {
+    return (Math.round((number + Number.EPSILON) * 100) / 100)
 }
 
 /**

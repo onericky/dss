@@ -1,63 +1,99 @@
-<!--<script src="https://code.highcharts.com/highcharts.js"></script>-->
-<!--<script src="https://code.highcharts.com/modules/exporting.js"></script>-->
-<!--<script src="https://code.highcharts.com/modules/export-data.js"></script>-->
-<!--<script src="https://code.highcharts.com/modules/accessibility.js"></script>-->
+<div class="row">
+<div id="preloader-dss" class="preloader-background">
+  <div class="preloader-wrapper big active">
+    <div class="spinner-layer spinner-blue">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div>
+      <div class="gap-patch">
+        <div class="circle"></div>
+      </div>
+      <div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
 
-<!--<script src="http://code.highcharts.com/modules/exporting.js"></script>-->
-<!--<script src="http://code.highcharts.com/modules/offline-exporting.js"></script>-->
-<!--<script src="http://code.highcharts.com/modules/export-data.js"></script>-->
-<!--<script src="http://code.highcharts.com/modules/series-label.js"></script>-->
-<!--<script src="http://code.highcharts.com/modules/data.js"></script>-->
+    <div class="spinner-layer spinner-red">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div>
+      <div class="gap-patch">
+        <div class="circle"></div>
+      </div>
+      <div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
 
-<script>
-    $(document).ready(function() {
+    <div class="spinner-layer spinner-yellow">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div>
+      <div class="gap-patch">
+        <div class="circle"></div>
+      </div>
+      <div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
 
-    });
-</script>
+    <div class="spinner-layer spinner-green">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div>
+      <div class="gap-patch">
+        <div class="circle"></div>
+      </div>
+      <div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
+  </div>
+  <p class="blinking">Loading</p>
+
+  <!--    <div class="progress">-->
+  <!--      <div class="indeterminate" style="width: 70%"></div>-->
+  <!--    </div>-->
+
+</div>
+</div>
 
 <div class="row">
   <div class="col s12 m12 ">
     <div class="col s2 m2 right-dss">
-      <a id="simulate-dss" class="waves-effect waves-light btn pink darken-4"><i class="material-icons left">search</i>ACCEPT</a>
+      <a id="eis-dss" class="waves-effect waves-light btn pink darken-4"><i class="material-icons left">search</i>ACCEPT</a>
     </div>
-<!--    <div class="col s1 m1 right-dss">-->
-<!--      <div class="input-field">-->
-<!--        <input type="text" id="date-end" class="datepicker" required aria-required="true" value="2020-06-06">-->
-<!--        <label for="date-start">Date End</label>-->
-<!--      </div>-->
-<!--    </div>-->
     <div class="col s1 m1 right-dss">
       <div class="input-field">
-        <input type="text" id="date-start" class="datepicker" required aria-required="true" value="2020-05-31">
+        <input type="text" id="date-eis" class="datepicker" required aria-required="true" value="2020-01-05">
         <label for="date-start">Date</label>
       </div>
     </div>
   </div>
 </div>
 
-<%= "max" %>
-<%= @max %>
-
 <div class="row">
-  <div class="col s12 m12">
+  <div class="col m6 s6" id="charEISTotalDeliveriesZone">
     <figure class="highcharts-figure">
-      <div id="container1"></div>
+      <div id="containerEISTotalDeliveriesZone"></div>
+    </figure>
+  </div>
+  <div class="col m6 s6" id="charEISRevenue">
+    <figure class="highcharts-figure">
+      <div id="containerEISRevenue"></div>
     </figure>
   </div>
 </div>
 
 <div class="row">
-  <div class="col s12 m12">
+  <div class="col m6 s6" id="charEISDeliveryTime">
     <figure class="highcharts-figure">
-      <div id="container2"></div>
+      <div id="containerEISDeliveryTime"></div>
     </figure>
   </div>
-</div>
-
-<div class="row">
-  <div class="col s12 m12">
+  <div class="col m6 s6" id="charEISRevenueStatus">
     <figure class="highcharts-figure">
-      <div id="container3"></div>
+      <div id="containerEISRevenueStatus"></div>
     </figure>
   </div>
 </div>
