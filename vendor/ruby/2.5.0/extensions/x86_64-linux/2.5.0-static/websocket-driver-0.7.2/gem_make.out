@@ -1,0 +1,15 @@
+current directory: /home/castro/Documentos/repo/ruby/dss/vendor/ruby/2.5.0/gems/websocket-driver-0.7.2/ext/websocket-driver
+/usr/local/bin/ruby -r ./siteconf20200604-10607-1qi84ov.rb extconf.rb
+creating Makefile
+
+current directory: /home/castro/Documentos/repo/ruby/dss/vendor/ruby/2.5.0/gems/websocket-driver-0.7.2/ext/websocket-driver
+make "DESTDIR=" clean
+
+current directory: /home/castro/Documentos/repo/ruby/dss/vendor/ruby/2.5.0/gems/websocket-driver-0.7.2/ext/websocket-driver
+make "DESTDIR="
+compiling websocket_mask.c
+linking shared-object websocket_mask.so
+
+current directory: /home/castro/Documentos/repo/ruby/dss/vendor/ruby/2.5.0/gems/websocket-driver-0.7.2/ext/websocket-driver
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 websocket_mask.so ./.gem.20200604-10607-1yimxkg

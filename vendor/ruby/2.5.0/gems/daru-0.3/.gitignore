@@ -1,0 +1,9 @@
+*.gem
+Gemfile.lock
+doc/
+.yardoc/
+.bundle
+vendor/
+profile/out/
+coverage/
+.ruby-version

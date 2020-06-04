@@ -1,0 +1,39 @@
+current directory: /home/castro/Documentos/repo/ruby/dss/vendor/ruby/2.5.0/bundler/gems/tiny_tds-2a846b937d6c/ext/tiny_tds
+/usr/local/bin/ruby -r ./siteconf20200604-385-izcmd2.rb extconf.rb
+looking for freetds headers in the following directories:
+ - /opt/local/include
+ - /opt/local/include/freetds
+ - /usr/local/include
+ - /usr/local/include/freetds
+looking for freetds library in the following directories:
+ - /opt/local/lib
+ - /opt/local/lib/freetds
+ - /usr/local/lib
+ - /usr/local/lib/freetds
+checking for sybfront.h... yes
+checking for sybdb.h... yes
+checking for tdsdbopen() in -lsybdb... yes
+checking for dbanydatecrack() in -lsybdb... yes
+creating Makefile
+
+current directory: /home/castro/Documentos/repo/ruby/dss/vendor/ruby/2.5.0/bundler/gems/tiny_tds-2a846b937d6c/ext/tiny_tds
+make "DESTDIR=" clean
+
+current directory: /home/castro/Documentos/repo/ruby/dss/vendor/ruby/2.5.0/bundler/gems/tiny_tds-2a846b937d6c/ext/tiny_tds
+make "DESTDIR="
+compiling client.c
+client.c: In function ‘tinytds_msg_handler’:
+client.c:143:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+   int is_message_an_error = severity > 10 ? 1 : 0;
+   ^~~
+client.c: At top level:
+cc1: warning: unrecognized command line option ‘-Wno-self-assign’
+cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
+cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
+compiling result.c
+compiling tiny_tds_ext.c
+linking shared-object tiny_tds/tiny_tds.so
+
+current directory: /home/castro/Documentos/repo/ruby/dss/vendor/ruby/2.5.0/bundler/gems/tiny_tds-2a846b937d6c/ext/tiny_tds
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 tiny_tds.so ./.gem.20200604-385-o66pe2/tiny_tds

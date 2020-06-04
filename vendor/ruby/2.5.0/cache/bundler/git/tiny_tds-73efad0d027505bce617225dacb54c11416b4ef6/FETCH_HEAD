@@ -1,0 +1,52 @@
+8edeb85425928cb5cd0163099564ac9ba685d4f1		branch '1-stable' of https://github.com/rails-sqlserver/tiny_tds
+af6ff87c6fafc1206b93cc096f71ad596abaf3c6		branch 'gh-pages' of https://github.com/rails-sqlserver/tiny_tds
+2a846b937d6cddfaf96b82227d14496f450e74ec		branch 'master' of https://github.com/rails-sqlserver/tiny_tds
+bb03ed7043639daa714fc164a044687eebcf633a		branch 'raise-error-if-execute-fails' of https://github.com/rails-sqlserver/tiny_tds
+2e347f97361e675ebcfcd670ffd71bd71ebf35eb	not-for-merge	tag '0.1.0' of https://github.com/rails-sqlserver/tiny_tds
+3cfe7c6bc60ada53b6e83e3db8f4bc3731e84db2	not-for-merge	tag '0.2.0' of https://github.com/rails-sqlserver/tiny_tds
+923557050230fd74b27262890325460997d7fc17	not-for-merge	tag '0.2.1' of https://github.com/rails-sqlserver/tiny_tds
+ed6d863830272efcacb4fda78d0809db7b48b92a	not-for-merge	tag '0.2.2' of https://github.com/rails-sqlserver/tiny_tds
+6f13695fa0ec4add3a914ecb39db048cbc0aecaa	not-for-merge	tag '0.2.3' of https://github.com/rails-sqlserver/tiny_tds
+0d2a03c54145c83f29ef8f079269e979f4901b61	not-for-merge	tag '2.1.0.pre2' of https://github.com/rails-sqlserver/tiny_tds
+390200d9b97578e605f5b22a86a2991d413a7107	not-for-merge	tag 'v0.3.0' of https://github.com/rails-sqlserver/tiny_tds
+3404b76926947651416198e95d2157971dbaf8f8	not-for-merge	tag 'v0.3.1' of https://github.com/rails-sqlserver/tiny_tds
+43779d56c243547c4920953d757012cc54c40399	not-for-merge	tag 'v0.3.2' of https://github.com/rails-sqlserver/tiny_tds
+23831d0658d75b807361c32ae49b14d466f447f5	not-for-merge	tag 'v0.4.1' of https://github.com/rails-sqlserver/tiny_tds
+12eb2e70cb55c35488ee7db0516b0b11c18c7f6c	not-for-merge	tag 'v0.4.2' of https://github.com/rails-sqlserver/tiny_tds
+55c0724c2e66ef7f0eb02104e9decf9765ef3501	not-for-merge	tag 'v0.4.4' of https://github.com/rails-sqlserver/tiny_tds
+aadb16030dbccb145d58ea3020f1b92627bb2df4	not-for-merge	tag 'v0.4.5' of https://github.com/rails-sqlserver/tiny_tds
+139e26c2d80dff90b59d362890c4ee98715e7bc8	not-for-merge	tag 'v0.5.0' of https://github.com/rails-sqlserver/tiny_tds
+bd9303a9dedba6fcc13370e453efdb08ef41a3cd	not-for-merge	tag 'v0.5.0.rc1' of https://github.com/rails-sqlserver/tiny_tds
+646d9109435329d78b0b8649201e14ad03c60104	not-for-merge	tag 'v0.5.1' of https://github.com/rails-sqlserver/tiny_tds
+b9dcf4f9fd43a7dae242a52949917c4e27dc55b1	not-for-merge	tag 'v0.5.1.rc1' of https://github.com/rails-sqlserver/tiny_tds
+5a1387370ebde2928abe16c3b830a294735f33c0	not-for-merge	tag 'v0.5.2.rc1' of https://github.com/rails-sqlserver/tiny_tds
+c82b96e94e616460e4d2c0c38898f592b8b1c068	not-for-merge	tag 'v0.5.2.rc2' of https://github.com/rails-sqlserver/tiny_tds
+40fec1289a187554e90a243d4dbd788d7b6dd6f4	not-for-merge	tag 'v0.5.2.rc3' of https://github.com/rails-sqlserver/tiny_tds
+30cca9ab181c02fe51aa91cfa078e8017cdce067	not-for-merge	tag 'v0.5.2.rc4' of https://github.com/rails-sqlserver/tiny_tds
+c479196c4163731e8cb7425a25f57e459c678c2a	not-for-merge	tag 'v0.6.0' of https://github.com/rails-sqlserver/tiny_tds
+2d61b1d8e11d5674c5887a7e74f75597792fd417	not-for-merge	tag 'v0.6.1' of https://github.com/rails-sqlserver/tiny_tds
+ef0f7443b0c87f2a9c67b15893754e0c0aba7396	not-for-merge	tag 'v0.6.2' of https://github.com/rails-sqlserver/tiny_tds
+fc8da38e4bdf283ed25f9bbb3c636ad7ff319afe	not-for-merge	tag 'v0.7.0' of https://github.com/rails-sqlserver/tiny_tds
+807ffa7da3a4d0cd4b4f7dc592d52c045079fc56	not-for-merge	tag 'v0.9.5.beta.1' of https://github.com/rails-sqlserver/tiny_tds
+cc9829bdf3be609e5eca07fd55f082daf9c00391	not-for-merge	tag 'v0.9.5.beta.10' of https://github.com/rails-sqlserver/tiny_tds
+0a9f50016d83bd8605975acdd3860b2d8a75c24c	not-for-merge	tag 'v0.9.5.beta.11' of https://github.com/rails-sqlserver/tiny_tds
+bdc8cc6c50d02de718f8a04d57038b075f3b1bb1	not-for-merge	tag 'v0.9.5.beta.2' of https://github.com/rails-sqlserver/tiny_tds
+e2a0c0dba737f6bc394868ecafedd8d97be5c731	not-for-merge	tag 'v0.9.5.beta.4' of https://github.com/rails-sqlserver/tiny_tds
+96ab832a6c6ca4e3967ef07502d48d006a5f84b5	not-for-merge	tag 'v0.9.5.beta.5' of https://github.com/rails-sqlserver/tiny_tds
+2366b542415cffd421e182ffa734bf680e427d2c	not-for-merge	tag 'v0.9.5.beta.6' of https://github.com/rails-sqlserver/tiny_tds
+2c2785a82a8a50384828617520b39e9923108887	not-for-merge	tag 'v0.9.5.beta.8' of https://github.com/rails-sqlserver/tiny_tds
+a03da2ce6668721f72af0b8d4231914f5cdd8654	not-for-merge	tag 'v0.9.5.beta.9' of https://github.com/rails-sqlserver/tiny_tds
+9f86d80dfc09737ee90dc1d87381304a2b8e2065	not-for-merge	tag 'v0.9.5.rc.1' of https://github.com/rails-sqlserver/tiny_tds
+7fa422c38fc5eec2953982933b88dad608042746	not-for-merge	tag 'v0.9.5.rc.2' of https://github.com/rails-sqlserver/tiny_tds
+2564297fd49ac52f914908ae9c78acedb5fce85b	not-for-merge	tag 'v1.0.0' of https://github.com/rails-sqlserver/tiny_tds
+cfd8e98aafeb05cbf21ddb0199c6eaa3ed003ada	not-for-merge	tag 'v1.0.1' of https://github.com/rails-sqlserver/tiny_tds
+9d3c597d374af636bbbb53cc866f4d4a033eaef0	not-for-merge	tag 'v1.0.2' of https://github.com/rails-sqlserver/tiny_tds
+5181635d12865b9026cf65ccc4d01c54075f8db0	not-for-merge	tag 'v1.0.4' of https://github.com/rails-sqlserver/tiny_tds
+822b21b1295e021724c921d194f1100b127c2306	not-for-merge	tag 'v1.0.5' of https://github.com/rails-sqlserver/tiny_tds
+0d014a386ba3b35b8951e3264c453190c36bbb3e	not-for-merge	tag 'v1.1.0' of https://github.com/rails-sqlserver/tiny_tds
+69743e13166f58aed96dea0081db1ee0cb416f09	not-for-merge	tag 'v1.2.0' of https://github.com/rails-sqlserver/tiny_tds
+7126c71d093823b9775941a2f1f70f6c61b8d255	not-for-merge	tag 'v1.3.0' of https://github.com/rails-sqlserver/tiny_tds
+c8d8e39b481ca3f995278868139452fba4fdc555	not-for-merge	tag 'v2.1.0' of https://github.com/rails-sqlserver/tiny_tds
+58fd861af9026fee68c882229a1ebb6940fbd0a1	not-for-merge	tag 'v2.1.0.pre1' of https://github.com/rails-sqlserver/tiny_tds
+d439beaed748eb4c45658a2f57e8d457672edce9	not-for-merge	tag 'v2.1.0.pre3' of https://github.com/rails-sqlserver/tiny_tds
+60622343aa47cd994a4450625c358fcfe72b953f	not-for-merge	tag 'v2.1.0.pre4' of https://github.com/rails-sqlserver/tiny_tds

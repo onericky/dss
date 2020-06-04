@@ -1,0 +1,35 @@
+4f27875a32b1ef5aeee1b9c43900fb9fee94b8c5		branch '57_executable2' of https://github.com/SciRuby/daru-view
+eb549e96e85c6bff16d4f69e2e6e393c86071456		branch '57_executables' of https://github.com/SciRuby/daru-view
+76d61ab9f35c9e75357ca7bd38f7e3abd6ea4af5		branch 'checkpoint-googlechart-data_tables_v1' of https://github.com/SciRuby/daru-view
+6e22f30b9235f5a7ae0dfec838dd5d000e4cc484		branch 'checkpoint-googlechart-data_tables_v2' of https://github.com/SciRuby/daru-view
+6121bac7fc4cfa4008419606f1d2777455272064		branch 'checkpoint-nyaplot-highcharts-30june2017' of https://github.com/SciRuby/daru-view
+ca23d2fe06a80a81a93162a23c590c50987fce1f		branch 'coveralls_test_gems' of https://github.com/SciRuby/daru-view
+76d9490e5ebaf76c4b4af14cc7cff26f1007d47c		branch 'daru_chart_table' of https://github.com/SciRuby/daru-view
+69937c39e3e4a572de2b3b2bec8ce1307ffc3ddd		branch 'daru_data_tables' of https://github.com/SciRuby/daru-view
+a5e882cd52b29c24d7cad0ae569096a420698e7a		branch 'daru_version' of https://github.com/SciRuby/daru-view
+b51ee572de7ace6bd76051ee39bbbe996ecef97e		branch 'examples' of https://github.com/SciRuby/daru-view
+46a88e98f0ec2ce903397c5a6931c3c1fed64d6f		branch 'google_chart' of https://github.com/SciRuby/daru-view
+f5afc70269ae22664f22e7f8cf86f7c10f4f26cb		branch 'highchart_html_table' of https://github.com/SciRuby/daru-view
+a7fce46f13a2e5cee493e36466708f4f08d05712		branch 'master' of https://github.com/SciRuby/daru-view
+5290cb2934fedef767edc8cc5c2101560532a9d5		branch 'monkeys' of https://github.com/SciRuby/daru-view
+e6fb3f9a56590f696f937864e158d39e584b4eae		branch 'new_release0dot2' of https://github.com/SciRuby/daru-view
+1e1c95210b26928033622313ad875b6a2a6e0c51		branch 'nyaplot_highcharts' of https://github.com/SciRuby/daru-view
+3ef8793a1e5d1659632a9f191827045f04aabae2		branch 'nyaplot_initial' of https://github.com/SciRuby/daru-view
+50c9542cb03009488d02c1c612199809ff207983		branch 'pr_template' of https://github.com/SciRuby/daru-view
+41a8931ed187583fde401c9fe4d41d3a7a8b254a		branch 'readme' of https://github.com/SciRuby/daru-view
+0dc4b4322ba02c9fde3c3c240341e6fbf552d4dd		branch 'readme_examples' of https://github.com/SciRuby/daru-view
+b0657059ac517a91d386ec7075acc1e3ce3b9e73		branch 'readme_update' of https://github.com/SciRuby/daru-view
+d72cb551c1db4677988338ca814f3834d3a6ea4b		branch 'release' of https://github.com/SciRuby/daru-view
+bbf8c6d9d02e342f0b3834d59f078d4235f08617		branch 'release0.2.5_changelog' of https://github.com/SciRuby/daru-view
+b26d7ffafd152667c3bb3b25de907248080f65b9		branch 'release0dot2dot5' of https://github.com/SciRuby/daru-view
+44c4c701a5850186083ff0b0eaaedbe94bf60d0c		branch 'remove_checkpoint_iruby' of https://github.com/SciRuby/daru-view
+67fed04bb2e0e70684457b5fcab2540ca2276323		branch 'rspec_setup' of https://github.com/SciRuby/daru-view
+ea9655123bcebcf69f4bab48bc81e8de8a9305e4		branch 'rubocopVerson0dot60' of https://github.com/SciRuby/daru-view
+9dca64a5fe2579136b64236014e6111a9008315b		branch 'rubocop_update' of https://github.com/SciRuby/daru-view
+6003cc47664563419c63f355ccbf13358d6afe31		branch 'shekhar_dev' of https://github.com/SciRuby/daru-view
+ae5d8d864de8d87ed1871fb7933cf199cb50b4e2		branch 'specs_nyaplot_highcharts' of https://github.com/SciRuby/daru-view
+22f857825fc717a8223fc7bc69a3c82920fb1cfa		branch 'test_improve' of https://github.com/SciRuby/daru-view
+a157091a1a1cdca4c4a7bf160ef0bb1c99073ac0		branch 'windows-installation-iruby-notebook' of https://github.com/SciRuby/daru-view
+83957c95b7340f297f699aa3543b574daa2e067f	not-for-merge	tag 'v0.1.0' of https://github.com/SciRuby/daru-view
+b1abc1f45336177adb3fa71bfc8910120f960d11	not-for-merge	tag 'v0.2.4' of https://github.com/SciRuby/daru-view
+addd41164dca7f03a3535d7dd31c504ecde69837	not-for-merge	tag 'v0.2.5' of https://github.com/SciRuby/daru-view

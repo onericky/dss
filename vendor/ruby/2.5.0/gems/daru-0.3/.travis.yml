@@ -1,0 +1,33 @@
+language:
+  ruby
+
+rvm:
+  - '2.5.1'
+  - '2.7.1'
+
+matrix:
+  allow_failures:
+    - rvm: '2.0'
+  fast_finish:
+    true
+
+env:
+  - DARU_TEST_NMATRIX=1 DARU_TEST_GSL=1
+
+script:
+  - bundle add yard-junk
+  - bundle install
+  - bundle exec rspec
+  - bundle exec rubocop
+  - bundle exec yard-junk
+
+install:
+  - gem install bundler
+  - gem install rainbow -v '2.2.1'
+  - bundle install
+
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -y libgsl0-dev r-base r-base-dev
+  - sudo Rscript -e "install.packages(c('Rserve','irr'),,'http://cran.us.r-project.org')"
+  - sudo apt-get install libmagickwand-dev imagemagick
