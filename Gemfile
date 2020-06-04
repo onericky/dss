@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.5.3'
-# ruby '2.6.6'
+# ruby '2.5.3'
+ruby '2.6.6'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0.0'
@@ -54,8 +54,8 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
-gem 'tiny_tds', "~> 2.1.2"
-# gem 'tiny_tds', "~> 2.1.3.pre"
+# gem 'tiny_tds', "~> 2.1.2"
+gem 'tiny_tds', "~> 2.1.3.pre"
 gem 'activerecord-sqlserver-adapter', :git => "https://github.com/rails-sqlserver/activerecord-sqlserver-adapter.git"
 
 gem 'daru-view', :git => 'https://github.com/SciRuby/daru-view'
