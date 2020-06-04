@@ -11,20 +11,6 @@ GIT
       nyaplot
       thor
 
-GIT
-  remote: https://github.com/rails-sqlserver/activerecord-sqlserver-adapter.git
-  revision: f5861b72594862f682689d677722354238bc9029
-  specs:
-    activerecord-sqlserver-adapter (6.0.0.rc2)
-      activerecord (~> 6.0.0)
-      tiny_tds
-
-GIT
-  remote: https://github.com/rails-sqlserver/tiny_tds.git
-  revision: 2a846b937d6cddfaf96b82227d14496f450e74ec
-  specs:
-    tiny_tds (2.1.2)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -72,6 +58,7 @@ GEM
     activerecord (6.0.3.1)
       activemodel (= 6.0.3.1)
       activesupport (= 6.0.3.1)
+    activerecord-sqlserver-adapter (2.3.8)
     activestorage (6.0.3.1)
       actionpack (= 6.0.3.1)
       activejob (= 6.0.3.1)
@@ -214,6 +201,8 @@ GEM
     thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
+    tiny_tds (2.1.2)
+    tiny_tds (2.1.2-x64-mingw32)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -246,7 +235,7 @@ PLATFORMS
   x64-mingw32
 
 DEPENDENCIES
-  activerecord-sqlserver-adapter!
+  activerecord-sqlserver-adapter
   bootsnap (>= 1.4.2)
   byebug
   capybara (>= 2.15)
@@ -259,7 +248,7 @@ DEPENDENCIES
   selenium-webdriver
   spring
   spring-watcher-listen (~> 2.0.0)
-  tiny_tds (>= 2.1.2)!
+  tiny_tds
   turbolinks (~> 5)
   tzinfo-data
   web-console (>= 3.3.0)
