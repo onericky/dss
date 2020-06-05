@@ -4,6 +4,8 @@ class DashboardController < ApplicationController
   end
 
   def eis
+    m_historical = VHistoricalOrdersByWeek.new
+    @test_q = m_historical.test_query
   end
 
   def about

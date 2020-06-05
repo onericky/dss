@@ -47,4 +47,10 @@ class VHistoricalOrdersByWeek < ApplicationRecord
         .where(idWeek: idWeek)
   end
 
+  def test_query
+    id_week = 7
+    sql = "SELECT max(idHistoricalOrderByWeek), idDeliveryByWeek, sum(totalOrder) from vHistoricalOrdersByWeek where idWeek = #{id_week} group by idDeliveryByWeek"
+    results = ActiveRecord::Base.connection.exec_query(sql)
+  end
+
 end
