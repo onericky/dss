@@ -5,7 +5,7 @@ class DashboardController < ApplicationController
 
   def eis
     m_historical = VHistoricalOrdersByWeek.new
-    @test_q = m_historical.test_query
+    @test_q = m_historical.getTotalOrders(7, 7)
   end
 
   def about
@@ -22,22 +22,24 @@ class DashboardController < ApplicationController
   def eis_post
     case request.method_symbol
     when :post
-      date = params[:date]
+      date_start = params[:date_start]
+      date_end = params[:date_end]
 
-      id_week = getIdWeek(date)
+      id_week_start = getIdWeek(date_start)
+      id_week_end = getIdWeek(date_end)
 
-      if id_week != ""
+      if id_week_start != ""
         m_historical = VHistoricalOrdersByWeek.new
-        historical = m_historical.getHistoricalByWeek(id_week)
+        historical = m_historical.getHistoricalByWeek(id_week_start)
 
         m_expenses_week = ExpenseByWeek.new
-        expenses = m_expenses_week.getExpenses(id_week)
+        expenses = m_expenses_week.getExpenses(id_week_start)
 
         m_delivery_week = DeliveryByWeek.new
-        delivery = m_delivery_week.getDelivery(id_week)
+        delivery = m_delivery_week.getDelivery(id_week_start)
 
-        revenue = m_historical.getRevenues(id_week)
-        orders_zones = m_historical.getOrdersByZone(id_week)
+        revenue = m_historical.getRevenues(id_week_start)
+        orders_zones = m_historical.getOrdersByZone(id_week_start)
 
         result = true
         if historical.empty? || expenses.empty? || delivery.empty? || orders_zones.empty?
@@ -46,7 +48,7 @@ class DashboardController < ApplicationController
 
         array_result = ['historical' => historical, 'expenses' => expenses, 'delivery' => delivery, 'revenue' => revenue, 'orders_zones' => orders_zones]
 
-        render json: {'result': result, 'date': date, 'idWeek': id_week, 'arrayResult': array_result}
+        render json: {'result': result, 'date_start': date_start, 'id_week_start': id_week_start, 'id_week_end': id_week_end, 'arrayResult': array_result}
       else
         render json: {'result': false}
       end

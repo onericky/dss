@@ -104,16 +104,24 @@ $(document).ready(function(){
     });
 
     $('#eis-dss').click(function() {
-        var date = $('#date-eis').val();
+        var date_start = $('#date-start-eis').val();
+        var date_end = $('#date-end-eis').val();
 
-        if(date === "") {
-            M.toast({html: 'Date is required to filter!'});
+        console.log(date_start);
+
+        if(date_start === "") {
+            M.toast({html: 'Week start date is required to filter!'});
+            return 0;
+        }
+
+        if(date_end === "") {
+            M.toast({html: 'Week end date is required to filter!'});
             return 0;
         }
 
         $.ajax({
             url: '/dashboard/eis_post',
-            data: {'date': date},
+            data: {'date_start': date_start, 'date_end': date_end},
             dataType: "json",
             type: 'post',
             beforeSend: function () {

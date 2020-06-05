@@ -53,4 +53,16 @@ class VHistoricalOrdersByWeek < ApplicationRecord
     results = ActiveRecord::Base.connection.exec_query(sql)
   end
 
+  def getTotalOrders(id_week_start, id_week_end)
+    id_week_start = 5
+    id_week_end = 6
+
+    sql = "SELECT max(idHistoricalOrderByWeek), idDeliveryByWeek, totalOrder, totalOrderAfterDiscount, idWeek, discountPercentaje
+          from vHistoricalOrdersByWeek
+          where idWeek between #{id_week_start} and #{id_week_end}
+          group by idDeliveryByWeek, totalOrder, totalOrderAfterDiscount, idWeek, discountPercentaje"
+
+    ActiveRecord::Base.connection.exec_query(sql)
+  end
+
 end
