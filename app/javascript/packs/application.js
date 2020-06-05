@@ -687,7 +687,8 @@ function charEISDeliveryTime(dataResult) {
 }
 
 function charEISRevenue(dataResult) {
-    var bike_revenue = moto_revenue = car_revenue = total_revenue = total_sales = total_expenses = 0;
+    var bike_revenue = moto_revenue = car_revenue = total_revenue = total_sales = total_expenses = v = 0;
+    var sw_1 = sw_2 = sw_3 = false;
 
     $.each(dataResult[0]['expenses'], function(key, data) {
         total_expenses += data['cost'];
@@ -695,35 +696,57 @@ function charEISRevenue(dataResult) {
 
     $.each(dataResult[0]['revenue'], function(key, data) {
         if(data['idDeliveryMethod'] == 1) {
-            if(bike_revenue <= 0) {
+            if(bike_revenue <= 0 && sw_1 == false) {
                 total_revenue += data['total_revenue'];
                 total_sales += data['total_sales'];
+                if(data['total_revenue_bike'] > 0) {
+                    v ++;
+                }
+                sw_1 = true;
             }
 
             bike_revenue = data['total_revenue_bike'];
         } else if(data['idDeliveryMethod'] == 2) {
-            if(moto_revenue <= 0) {
+            if(moto_revenue <= 0 && sw_2 == false) {
                 total_revenue += data['total_revenue'];
                 total_sales += data['total_sales'];
+                if(data['total_revenue_moto'] > 0) {
+                    v ++;
+                }
+                sw_2 = true;
             }
 
             moto_revenue = data['total_revenue_moto'];
         } else if(data['idDeliveryMethod'] == 3) {
-            if(car_revenue <= 0) {
+            if(car_revenue <= 0 && sw_3 == false) {
                 total_revenue += data['total_revenue'];
                 total_sales += data['total_sales'];
+                if(data['total_revenue_car'] > 0) {
+                    v ++;
+                }
+                sw_3 = true;
             }
 
             car_revenue = data['total_revenue_car'];
         }
     });
 
+    vehicle_total_revenue = ((bike_revenue + moto_revenue + car_revenue) / v);
+    console.log(bike_revenue);
+    console.log(moto_revenue);
+    console.log(car_revenue);
+    console.log(vehicle_total_revenue);
+    console.log('valor v => '+ v);
+
     bike_revenue = roundDecimals(bike_revenue);
     moto_revenue = roundDecimals(moto_revenue);
     car_revenue = roundDecimals(car_revenue);
+    vehicle_total_revenue = roundDecimals(vehicle_total_revenue);
     total_revenue = roundDecimals(total_revenue);
     total_sales = roundDecimals(total_sales);
     total_expenses = roundDecimals(total_expenses);
+
+    var total_array = [total_revenue, total_sales, total_expenses];
 
     $('#charEISRevenue').show();
 
@@ -733,71 +756,66 @@ function charEISRevenue(dataResult) {
         },
 
         chart: {
-            type: 'pie'
+            inverted: false,
+            polar: false
         },
 
-        tooltip: {
-            valueSuffix: ' MXN',
-            borderColor: '#8ae'
+        xAxis: {
+            categories: ['Total revenue', 'Total sales', 'Total expenses']
         },
 
-        plotOptions: {
-            series: {
-                dataLabels: {
-                    enabled: true,
-                    connectorColor: '#777',
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-                },
-                cursor: 'pointer',
-                borderWidth: 3
-            }
+        yAxis: {
+            title: {
+                text: 'Value $'
+            },
+            allowDecimals: true
         },
 
         series: [{
-            name: 'Total',
-            data: [{
-                name: 'Bike',
-                y: bike_revenue,
-                color: getColorPattern(0)
-            }, {
-                name: 'Motorbike',
-                y: moto_revenue,
-                color: getColorPattern(1)
-            }, {
-                name: 'Car',
-                y: car_revenue,
-                color: getColorPattern(2)
-            }, {
-                name: 'Total revenue',
-                y: total_revenue,
-                color: getColorPattern(3)
-            }, {
-                name: 'Total expenses',
-                y: total_expenses,
-                color: getColorPattern(4)
-            }, {
-                name: 'Total sales',
-                y: total_sales,
-                color: getColorPattern(5)
-            } ]
-        }],
+            type: 'column',
+            colorByPoint: false,
+            data: total_array,
+            showInLegend: false,
+            color: '#004d40'
+        }]
+    });
 
-        responsive: {
-            rules: [{
-                condition: {
-                    maxWidth: 500
-                },
-                chartOptions: {
-                    plotOptions: {
-                        series: {
-                            dataLabels: {
-                                format: '<b>{point.name}</b>'
-                            }
-                        }
-                    }
-                }
-            }]
-        }
+    var total_vehicle_array = [bike_revenue, moto_revenue, car_revenue, vehicle_total_revenue];
+
+    $('#charEIScontainerEISTotalRevenueVehicles').show();
+
+    var chart2 = Highcharts.chart('containerEISTotalRevenueVehicles', {
+        title: {
+            text: 'Revenue report by vehicle'
+        },
+
+        subtitle: {
+            text: '(average)'
+        },
+
+        chart: {
+            inverted: false,
+            polar: false
+        },
+
+        xAxis: {
+            categories: ['bike', 'motorbike', 'car', 'average']
+        },
+
+        yAxis: {
+            title: {
+                text: 'Value $'
+            },
+            allowDecimals: true
+        },
+
+        series: [{
+            type: 'column',
+            colorByPoint: false,
+            data: total_vehicle_array,
+            showInLegend: false,
+            color: '#ff6f00'
+        }]
     });
 }
 
