@@ -107,8 +107,6 @@ $(document).ready(function(){
         var date_start = $('#date-start-eis').val();
         var date_end = $('#date-end-eis').val();
 
-        console.log(date_start);
-
         if(date_start === "") {
             M.toast({html: 'Week start date is required to filter!'});
             return 0;
@@ -635,9 +633,24 @@ function charsEIS(dataResult) {
 }
 
 function charEISDeliveryTime(dataResult) {
-    var vehiclesTime = {bike: dataResult[0]['delivery'][0]['timeByDelivery'],
-                        moto: dataResult[0]['delivery'][1]['timeByDelivery'],
-                        car: dataResult[0]['delivery'][2]['timeByDelivery']}
+    var vehiclesTime = {
+        bike: 0,
+        moto: 0,
+        car: 0
+    };
+
+    $.each(dataResult[0]['delivery'], function(key, data) {
+        if(data['idDeliveryMethod'] == 1) {
+            vehiclesTime['bike'] = data['time'] / data['n_weeks'];
+        }
+        if(data['idDeliveryMethod'] == 2) {
+            vehiclesTime['moto'] = data['time'] / data['n_weeks'];
+        }
+        if(data['idDeliveryMethod'] == 3) {
+            vehiclesTime['car'] = data['time'] / data['n_weeks'];
+        }
+    })
+
     var timeTotal = vehiclesTime['bike'] + vehiclesTime['moto'] + vehiclesTime['car'];
 
     var v = 0;
@@ -696,55 +709,38 @@ function charEISDeliveryTime(dataResult) {
 
 function charEISRevenue(dataResult) {
     var bike_revenue = moto_revenue = car_revenue = total_revenue = total_sales = total_expenses = v = 0;
-    var sw_1 = sw_2 = sw_3 = false;
 
-    $.each(dataResult[0]['expenses'], function(key, data) {
-        total_expenses += data['cost'];
-    });
+    total_expenses = dataResult[0]['expenses'][0]['total_expenses'];
 
     $.each(dataResult[0]['revenue'], function(key, data) {
         if(data['idDeliveryMethod'] == 1) {
-            if(bike_revenue <= 0 && sw_1 == false) {
-                total_revenue += data['total_revenue'];
-                total_sales += data['total_sales'];
-                if(data['total_revenue_bike'] > 0) {
-                    v ++;
-                }
-                sw_1 = true;
+            total_revenue += data['total_revenue'];
+            total_sales += data['total_sales'];
+            if(data['total_revenue_bike'] > 0) {
+                v ++;
             }
 
-            bike_revenue = data['total_revenue_bike'];
+            bike_revenue += data['total_revenue_bike'];
         } else if(data['idDeliveryMethod'] == 2) {
-            if(moto_revenue <= 0 && sw_2 == false) {
-                total_revenue += data['total_revenue'];
-                total_sales += data['total_sales'];
-                if(data['total_revenue_moto'] > 0) {
-                    v ++;
-                }
-                sw_2 = true;
+            total_revenue += data['total_revenue'];
+            total_sales += data['total_sales'];
+            if(data['total_revenue_moto'] > 0) {
+                v ++;
             }
 
-            moto_revenue = data['total_revenue_moto'];
+            moto_revenue += data['total_revenue_moto'];
         } else if(data['idDeliveryMethod'] == 3) {
-            if(car_revenue <= 0 && sw_3 == false) {
-                total_revenue += data['total_revenue'];
-                total_sales += data['total_sales'];
-                if(data['total_revenue_car'] > 0) {
-                    v ++;
-                }
-                sw_3 = true;
+            total_revenue += data['total_revenue'];
+            total_sales += data['total_sales'];
+            if(data['total_revenue_car'] > 0) {
+                v ++;
             }
 
-            car_revenue = data['total_revenue_car'];
+            car_revenue += data['total_revenue_car'];
         }
     });
 
     vehicle_total_revenue = ((bike_revenue + moto_revenue + car_revenue) / v);
-    console.log(bike_revenue);
-    console.log(moto_revenue);
-    console.log(car_revenue);
-    console.log(vehicle_total_revenue);
-    console.log('valor v => '+ v);
 
     bike_revenue = roundDecimals(bike_revenue);
     moto_revenue = roundDecimals(moto_revenue);
@@ -760,7 +756,7 @@ function charEISRevenue(dataResult) {
 
     var chart = Highcharts.chart('containerEISRevenue', {
         title: {
-            text: 'Revenue report'
+            text: 'Financial report'
         },
 
         chart: {
@@ -788,7 +784,7 @@ function charEISRevenue(dataResult) {
         }]
     });
 
-    var total_vehicle_array = [bike_revenue, moto_revenue, car_revenue, vehicle_total_revenue];
+    var total_vehicle_array = [bike_revenue, moto_revenue, car_revenue];
 
     $('#charEIScontainerEISTotalRevenueVehicles').show();
 
@@ -797,17 +793,13 @@ function charEISRevenue(dataResult) {
             text: 'Revenue report by vehicle'
         },
 
-        subtitle: {
-            text: '(average)'
-        },
-
         chart: {
             inverted: false,
             polar: false
         },
 
         xAxis: {
-            categories: ['bike', 'motorbike', 'car', 'average']
+            categories: ['Bike', 'Motorbike', 'Car']
         },
 
         yAxis: {
@@ -828,67 +820,189 @@ function charEISRevenue(dataResult) {
 }
 
 function charEISTotalDeliveriesZone(dataResult) {
-    var a_orders = {bike: 0, moto: 0, car: 0, total: 0};
-    var b_orders = {bike: 0, moto: 0, car: 0, total: 0};
-    var c_orders = {bike: 0, moto: 0, car: 0, total: 0};
+    var a_orders_with = {bike: 0, moto: 0, car: 0, total: 0};
+    var a_orders_without = {bike: 0, moto: 0, car: 0, total: 0};
+    var b_orders_with = {bike: 0, moto: 0, car: 0, total: 0};
+    var b_orders_without = {bike: 0, moto: 0, car: 0, total: 0};
+    var c_orders_with = {bike: 0, moto: 0, car: 0, total: 0};
+    var c_orders_without = {bike: 0, moto: 0, car: 0, total: 0};
 
     $.each(dataResult[0]['orders_zones'], function(key, data) {
-        if(data['idDeliveryMethod'] == 1) {
-            if(a_orders['bike'] <= 0) {
-                a_orders['bike'] += data['a_orders'];
-                a_orders['total'] += data['a_orders'];
+        if(data['idZone'] == 1) {
+            if(data['idDeliveryMethod'] == 1) {
+                a_orders_with['bike'] += data['total_by_zone_with'];
+                a_orders_without['bike'] += data['total_by_zone_without'];
             }
-            if(b_orders['bike'] <= 0) {
-                b_orders['bike'] += data['b_orders'];
-                b_orders['total'] += data['b_orders'];
+            if(data['idDeliveryMethod'] == 2) {
+                a_orders_with['moto'] += data['total_by_zone_with'];
+                a_orders_without['moto'] += data['total_by_zone_without'];
             }
-            if(c_orders['bike'] <= 0) {
-                c_orders['bike'] += data['c_orders'];
-                c_orders['total'] += data['c_orders'];
+            if(data['idDeliveryMethod'] == 3) {
+                a_orders_with['car'] += data['total_by_zone_with'];
+                a_orders_without['car'] += data['total_by_zone_without'];
             }
-        } else if(data['idDeliveryMethod'] == 2) {
-            if(a_orders['moto'] <= 0) {
-                a_orders['moto'] += data['a_orders'];
-                a_orders['total'] += data['a_orders'];
+        }
+        if(data['idZone'] == 2) {
+            if(data['idDeliveryMethod'] == 1) {
+                b_orders_with['bike'] += data['total_by_zone_with'];
+                b_orders_without['bike'] += data['total_by_zone_without'];
             }
-            if(b_orders['moto'] <= 0) {
-                b_orders['moto'] += data['b_orders'];
-                b_orders['total'] += data['b_orders'];
+            if(data['idDeliveryMethod'] == 2) {
+                b_orders_with['moto'] += data['total_by_zone_with'];
+                b_orders_without['moto'] += data['total_by_zone_without'];
             }
-            if(c_orders['moto'] <= 0) {
-                c_orders['moto'] += data['c_orders'];
-                c_orders['total'] += data['c_orders'];
+            if(data['idDeliveryMethod'] == 3) {
+                b_orders_with['car'] += data['total_by_zone_with'];
+                b_orders_without['car'] += data['total_by_zone_without'];
             }
-        } else if(data['idDeliveryMethod'] == 3) {
-            if(a_orders['car'] <= 0) {
-                a_orders['car'] += data['a_orders'];
-                a_orders['total'] += data['a_orders'];
+        }
+        if(data['idZone'] == 3) {
+            if(data['idDeliveryMethod'] == 1) {
+                c_orders_with['bike'] += data['total_by_zone_with'];
+                c_orders_without['bike'] += data['total_by_zone_without'];
             }
-            if(b_orders['car'] <= 0) {
-                b_orders['car'] += data['b_orders'];
-                b_orders['total'] += data['b_orders'];
+            if(data['idDeliveryMethod'] == 2) {
+                c_orders_with['moto'] += data['total_by_zone_with'];
+                c_orders_without['moto'] += data['total_by_zone_without'];
             }
-            if(c_orders['car'] <= 0) {
-                c_orders['car'] += data['c_orders'];
-                c_orders['total'] += data['c_orders'];
+            if(data['idDeliveryMethod'] == 3) {
+                c_orders_with['car'] += data['total_by_zone_with'];
+                c_orders_without['car'] += data['total_by_zone_without'];
             }
         }
     });
 
-    var bike_array = [a_orders['bike'], b_orders['bike'], c_orders['bike']];
-    var moto_array = [a_orders['moto'], b_orders['moto'], c_orders['moto']];
-    var car_array = [a_orders['car'], b_orders['car'], c_orders['car']];
-    var total_array = [a_orders['total'], b_orders['total'], c_orders['total']];
+    var total_bike_with_array = [a_orders_with['bike'] + b_orders_with['bike'] + c_orders_with['bike']];
+    var total_moto_with_array = [a_orders_with['moto'] + b_orders_with['moto'] + c_orders_with['moto']];
+    var total_car_with_array = [a_orders_with['car'] + b_orders_with['car'] + c_orders_with['car']];
+    var total_v_with_array = [total_bike_with_array, total_moto_with_array, total_car_with_array];
+
+    var total_bike_without_array = [a_orders_without['bike'] + b_orders_without['bike'] + c_orders_without['bike']];
+    var total_moto_without_array = [a_orders_without['moto'] + b_orders_without['moto'] + c_orders_without['moto']];
+    var total_car_without_array = [a_orders_without['car'] + b_orders_without['car'] + c_orders_without['car']];
+    var total_v_without_array = [total_bike_without_array, total_moto_without_array, total_car_without_array];
+
+    var total_bike_array = [(a_orders_with['bike'] + a_orders_without['bike']), (b_orders_with['bike'] + b_orders_without['bike']), (c_orders_with['bike'] + c_orders_without['bike'])];
+    var total_moto_array = [(a_orders_with['moto'] + a_orders_without['moto']), (b_orders_with['moto'] + b_orders_without['moto']), (c_orders_with['moto'] + c_orders_without['moto'])];
+    var total_car_array = [(a_orders_with['car'] + a_orders_without['car']), (b_orders_with['car'] + b_orders_without['car']), (c_orders_with['car'] + c_orders_without['car'])];
+    var total_bmc_array = [(
+                                (a_orders_with['bike'] + a_orders_without['bike']) +
+                                (a_orders_with['moto'] + a_orders_without['moto']) +
+                                (a_orders_with['car'] + a_orders_without['car'])
+                           ),
+                           (
+                                (b_orders_with['bike'] + b_orders_without['bike']) +
+                                (b_orders_with['moto'] + b_orders_without['moto']) +
+                                (b_orders_with['car'] + b_orders_without['car'])
+                           ),
+                           (
+                                (c_orders_with['bike'] + c_orders_without['bike']) +
+                                (c_orders_with['moto'] + c_orders_without['moto']) +
+                                (c_orders_with['car'] + c_orders_without['car'])
+                           )
+                           ];
+
+    var total_a_with_array = [a_orders_with['bike'] + a_orders_with['moto'] + a_orders_with['car']];
+    var total_b_with_array = [b_orders_with['bike'] + b_orders_with['moto'] + b_orders_with['car']];
+    var total_c_with_array = [c_orders_with['bike'] + c_orders_with['moto'] + c_orders_with['car']];
+    var total_with_array = [total_a_with_array, total_b_with_array, total_c_with_array];
+
+    var total_a_without_array = [a_orders_without['bike'] + a_orders_without['moto'] + a_orders_without['car']];
+    var total_b_without_array = [b_orders_without['bike'] + b_orders_without['moto'] + b_orders_without['car']];
+    var total_c_without_array = [c_orders_without['bike'] + c_orders_without['moto'] + c_orders_without['car']];
+    var total_without_array = [total_a_without_array, total_b_without_array, total_c_without_array];
+
 
     $('#charEISTotalDeliveriesZone').show();
 
-    var chart = Highcharts.chart('containerEISTotalDeliveriesZone', {
+    Highcharts.chart('containerEISTotalDeliveriesZone', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Total orders per zone'
+        },
+        subtitle: {
+            text: 'With and without discount'
+        },
+        xAxis: {
+            title: {
+                text: 'Zone'
+            },
+            categories: ['A', 'B', 'C']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Percentaje quantity'
+            }
+        },
+        tooltip: {
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+            shared: true
+        },
+        plotOptions: {
+            column: {
+                stacking: 'percent'
+            }
+        },
+        series: [{
+            name: 'With discount',
+            data: total_with_array
+        }, {
+            name: 'Without Discount',
+            data: total_without_array
+        }]
+    });
+
+    $('#charEISTotalDeliveriesZone').show();
+
+    Highcharts.chart('containerEISTotalDeliveriesVehicle', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Total orders per vehicle'
+        },
+        subtitle: {
+            text: 'With and without discount'
+        },
+        xAxis: {
+            categories: ['Bike', 'Motorbike', 'Car']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Percentaje quantity'
+            }
+        },
+        tooltip: {
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+            shared: true
+        },
+        plotOptions: {
+            column: {
+                stacking: 'percent'
+            }
+        },
+        series: [{
+            name: 'With discount',
+            data: total_v_with_array
+        }, {
+            name: 'Without Discount',
+            data: total_v_without_array
+        }]
+    });
+
+    $('#charEISTotalDeliveriesVehicle').show();
+
+    Highcharts.chart('containerEISTotalDeliveriesZoneVehicle', {
         chart: {
             type: 'line'
         },
 
         title: {
-            text: 'Total orders by zone'
+            text: 'Total orders per zone by vehicle'
         },
 
         xAxis: {
@@ -913,16 +1027,16 @@ function charEISTotalDeliveriesZone(dataResult) {
         },
         series: [{
             name: 'Bike',
-            data: bike_array
+            data: total_bike_array
         }, {
             name: 'Motorbike',
-            data: moto_array
+            data: total_moto_array
         }, {
             name: 'Car',
-            data: car_array
+            data: total_car_array
         }, {
             name: 'Total',
-            data: total_array
+            data: total_bmc_array
         }]
     });
 }
@@ -930,28 +1044,16 @@ function charEISTotalDeliveriesZone(dataResult) {
 function charEISRevenueStatus(dataResult) {
     var operating_expenses = 0;
     var total_revenue = 0;
-    var sw_1 = sw_2 = sw_3 = false;
 
-    $.each(dataResult[0]['expenses'], function(key, data) {
-        operating_expenses += data['cost'];
-    });
+    operating_expenses = dataResult[0]['expenses'][0]['total_expenses'];
 
     $.each(dataResult[0]['revenue'], function(key, data) {
         if(data['idDeliveryMethod'] == 1) {
-            if(sw_1 == false) {
-                total_revenue += data['total_revenue'];
-                sw_1 = true;
-            }
+            total_revenue += data['total_revenue'];
         } else if(data['idDeliveryMethod'] == 2) {
-            if(sw_2 == false) {
-                total_revenue += data['total_revenue'];
-                sw_2 = true;
-            }
+            total_revenue += data['total_revenue'];
         } else if(data['idDeliveryMethod'] == 3) {
-            if(sw_3 == false) {
-                total_revenue += data['total_revenue'];
-                sw_3 = true;
-            }
+            total_revenue += data['total_revenue'];
         }
     });
 

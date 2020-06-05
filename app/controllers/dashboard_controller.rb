@@ -4,8 +4,6 @@ class DashboardController < ApplicationController
   end
 
   def eis
-    m_historical = VHistoricalOrdersByWeek.new
-    @test_q = m_historical.getTotalOrders(7, 7)
   end
 
   def about
@@ -30,23 +28,21 @@ class DashboardController < ApplicationController
 
       if id_week_start != ""
         m_historical = VHistoricalOrdersByWeek.new
-        historical = m_historical.getHistoricalByWeek(id_week_start)
+        revenue = m_historical.getRevenues(id_week_start, id_week_end)
+        orders_zones = m_historical.getOrdersByZone(id_week_start, id_week_end)
 
         m_expenses_week = ExpenseByWeek.new
-        expenses = m_expenses_week.getExpenses(id_week_start)
+        expenses = m_expenses_week.getTotalExpenses(id_week_start, id_week_end)
 
         m_delivery_week = DeliveryByWeek.new
-        delivery = m_delivery_week.getDelivery(id_week_start)
-
-        revenue = m_historical.getRevenues(id_week_start)
-        orders_zones = m_historical.getOrdersByZone(id_week_start)
+        delivery = m_delivery_week.getDelivery(id_week_start, id_week_end)
 
         result = true
-        if historical.empty? || expenses.empty? || delivery.empty? || orders_zones.empty?
+        if expenses.empty? || delivery.empty? || orders_zones.empty?
           result = false
         end
 
-        array_result = ['historical' => historical, 'expenses' => expenses, 'delivery' => delivery, 'revenue' => revenue, 'orders_zones' => orders_zones]
+        array_result = ['expenses' => expenses, 'delivery' => delivery, 'revenue' => revenue, 'orders_zones' => orders_zones]
 
         render json: {'result': result, 'date_start': date_start, 'id_week_start': id_week_start, 'id_week_end': id_week_end, 'arrayResult': array_result}
       else
@@ -169,7 +165,7 @@ class DashboardController < ApplicationController
     record_expenses = m_expenses_week.getExpenses(id_week)
 
     m_delivery_week = DeliveryByWeek.new
-    record_delivery = m_delivery_week.getDelivery(id_week)
+    record_delivery = m_delivery_week.getDelivery(id_week, id_week)
 
     m_historical = VHistoricalOrdersByWeek.new
     record_historical = m_historical.getHistoricalByWeek(id_week)

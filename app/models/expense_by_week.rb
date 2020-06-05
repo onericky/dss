@@ -25,4 +25,12 @@ class ExpenseByWeek < ApplicationRecord
     ExpenseByWeek.where(idWeek: idWeek)
   end
 
+  def getTotalExpenses(id_week_start, id_week_end)
+    sql = "SELECT SUM(cost) as total_expenses
+          from expenseByWeek
+          where idWeek between #{id_week_start} and #{id_week_end}"
+
+    ActiveRecord::Base.connection.exec_query(sql)
+  end
+
 end

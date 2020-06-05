@@ -23,44 +23,33 @@ class VHistoricalOrdersByWeek < ApplicationRecord
     VHistoricalOrdersByWeek.where(idWeek: idWeek)
   end
 
-  def getRevenues(idWeek)
-    VHistoricalOrdersByWeek
-        .select('vHistoricalOrdersByWeek.idDeliveryByWeek',
-                'vHistoricalOrdersByWeek.totalOrderAfterDiscount as total_sales',
-                'deliveryByWeek.idDeliveryMethod',
-                '(vHistoricalOrdersByWeek.totalOrderAfterDiscount * 0.65) as total_revenue',
-                'CASE WHEN deliveryByWeek.idDeliveryMethod = 1 THEN ROUND((deliveryByWeek.costByDelivery * 0.65), 2) END as total_revenue_bike',
-                'CASE WHEN deliveryByWeek.idDeliveryMethod = 2 THEN ROUND((deliveryByWeek.costByDelivery * 0.65), 2) END as total_revenue_moto',
-                'CASE WHEN deliveryByWeek.idDeliveryMethod = 3 THEN ROUND((deliveryByWeek.costByDelivery * 0.65), 2) END as total_revenue_car')
-        .joins(:deliveryByWeek)
-        .where(idWeek: idWeek)
-  end
-
-  def getOrdersByZone(idWeek)
-    VHistoricalOrdersByWeek
-        .select('vHistoricalOrdersByWeek.idZone',
-                'deliveryByWeek.idDeliveryMethod',
-                'CASE WHEN vHistoricalOrdersByWeek.idZone = 1 THEN vHistoricalOrdersByWeek.quantityOfOrders END as a_orders',
-                'CASE WHEN vHistoricalOrdersByWeek.idZone = 2 THEN vHistoricalOrdersByWeek.quantityOfOrders END as b_orders',
-                'CASE WHEN vHistoricalOrdersByWeek.idZone = 3 THEN vHistoricalOrdersByWeek.quantityOfOrders END as c_orders')
-        .joins(:deliveryByWeek)
-        .where(idWeek: idWeek)
-  end
-
-  def test_query
-    id_week = 7
-    sql = "SELECT max(idHistoricalOrderByWeek), idDeliveryByWeek, sum(totalOrder) from vHistoricalOrdersByWeek where idWeek = #{id_week} group by idDeliveryByWeek"
-    results = ActiveRecord::Base.connection.exec_query(sql)
-  end
-
-  def getTotalOrders(id_week_start, id_week_end)
-    id_week_start = 5
-    id_week_end = 6
-
-    sql = "SELECT max(idHistoricalOrderByWeek), idDeliveryByWeek, totalOrder, totalOrderAfterDiscount, idWeek, discountPercentaje
+  def getRevenues(id_week_start, id_week_end)
+    sql = "SELECT
+          vHistoricalOrdersByWeek.idDeliveryByWeek,
+          deliveryByWeek.idDeliveryMethod,
+          vHistoricalOrdersByWeek.totalOrderAfterDiscount as total_sales,
+          (vHistoricalOrdersByWeek.totalOrderAfterDiscount * 0.65) as total_revenue,
+          CASE WHEN deliveryByWeek.idDeliveryMethod = 1 THEN (deliveryByWeek.costByDelivery * 0.65) END as total_revenue_bike,
+          CASE WHEN deliveryByWeek.idDeliveryMethod = 2 THEN (deliveryByWeek.costByDelivery * 0.65) END as total_revenue_moto,
+          CASE WHEN deliveryByWeek.idDeliveryMethod = 3 THEN (deliveryByWeek.costByDelivery * 0.65) END as total_revenue_car
           from vHistoricalOrdersByWeek
-          where idWeek between #{id_week_start} and #{id_week_end}
-          group by idDeliveryByWeek, totalOrder, totalOrderAfterDiscount, idWeek, discountPercentaje"
+          join deliveryByWeek on deliveryByWeek.idDeliveryByWeek = vHistoricalOrdersByWeek.idDeliveryByWeek
+          where vHistoricalOrdersByWeek.idWeek between #{id_week_start} and #{id_week_end} AND idOrderType = 1
+          group by deliveryByWeek.idDeliveryMethod, vHistoricalOrdersByWeek.idDeliveryByWeek, vHistoricalOrdersByWeek.totalOrderAfterDiscount, deliveryByWeek.costByDelivery"
+
+    ActiveRecord::Base.connection.exec_query(sql)
+  end
+
+  def getOrdersByZone(id_week_start, id_week_end)
+    sql = "SELECT vHistoricalOrdersByWeek.idZone, deliveryByWeek.idDeliveryMethod,
+          SUM(vHistoricalOrdersByWeek.quantityOfOrders) as total_by_zone,
+          SUM(CASE WHEN vHistoricalOrdersByWeek.discountPercentaje = 0 THEN vHistoricalOrdersByWeek.quantityOfOrders END) as total_by_zone_without,
+          SUM(CASE WHEN vHistoricalOrdersByWeek.discountPercentaje > 0 THEN vHistoricalOrdersByWeek.quantityOfOrders END) as total_by_zone_with,
+          vHistoricalOrdersByWeek.discountPercentaje
+          from vHistoricalOrdersByWeek
+          join deliveryByWeek on deliveryByWeek.idDeliveryByWeek = vHistoricalOrdersByWeek.idDeliveryByWeek
+          where vHistoricalOrdersByWeek.idWeek between #{id_week_start} and #{id_week_end} AND idOrderType = 1
+          group by deliveryByWeek.idDeliveryMethod, vHistoricalOrdersByWeek.idZone, vHistoricalOrdersByWeek.discountPercentaje"
 
     ActiveRecord::Base.connection.exec_query(sql)
   end
