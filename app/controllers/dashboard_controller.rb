@@ -137,12 +137,13 @@ class DashboardController < ApplicationController
           vehicle_time = getVehicleTime('car')
           traffic = getTrafficTime(@var_z[:z2].to_i)
           zone_time = getZoneTime(@zone_and_order_type[:zone])
+          weather_time = getWeatherTime(@var_z[:z3])
 
           pay = ((base_cost + (base_cost * order_type_cost) + (base_cost * zone_cost) + (base_cost * vehicle_cost) + risk_cost + weather_cost)).round(2)
           cost_normal = pay
           pay = (pay * discount).round(2)
 
-          time = (base_time + (base_time * order_type_time) + (base_time * traffic) + (base_time * zone_time) + (base_time * vehicle_time) + weather_cost).round(2)
+          time = (base_time + (base_time * order_type_time) + (base_time * traffic) + (base_time * zone_time) + (base_time * vehicle_time) + weather_time).round(2)
 
           # save in array
           setCostTimeVehicle(vehicle, cost_normal, pay, time, @zone_and_order_type[:zone])
@@ -507,6 +508,14 @@ class DashboardController < ApplicationController
       return 1.5
     when 'C'
       return  3
+    end
+  end
+
+  def getWeatherTime(z3)
+    if(z3 == 'true')
+      return 1
+    else
+      return 5
     end
   end
 
