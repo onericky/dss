@@ -623,6 +623,7 @@ function chars(dataResult) {
     charRevenue(dataResult.arrayResult);
     charQuantity(dataResult.arrayResult);
     charTotalRevenue(dataResult.operating_expenses, dataResult.total_revenue);
+    removeHcDefaultColor();
 }
 
 function charsEIS(dataResult) {
@@ -630,6 +631,22 @@ function charsEIS(dataResult) {
     charEISRevenue(dataResult.arrayResult);
     charEISTotalDeliveriesZone(dataResult.arrayResult);
     charEISRevenueStatus(dataResult.arrayResult);
+    removeHcDefaultColor();
+}
+
+function removeHcDefaultColor() {
+    $("g").removeClass("highcharts-color-0");
+    $("rect").removeClass("highcharts-color-0");
+    $("path").removeClass("highcharts-color-0");
+    $("g").removeClass("highcharts-color-1");
+    $("rect").removeClass("highcharts-color-1");
+    $("path").removeClass("highcharts-color-1");
+    $("g").removeClass("highcharts-color-2");
+    $("rect").removeClass("highcharts-color-2");
+    $("path").removeClass("highcharts-color-2");
+    $("g").removeClass("highcharts-color-3");
+    $("rect").removeClass("highcharts-color-3");
+    $("path").removeClass("highcharts-color-3");
 }
 
 function charEISDeliveryTime(dataResult) {
@@ -674,20 +691,17 @@ function charEISDeliveryTime(dataResult) {
             text: 'Delivery Time'
         },
 
+        subtitle: {
+            text: '(average)'
+        },
+
         chart: {
             inverted: true,
             polar: false
         },
 
-        subtitle: {
-            text: '(average)'
-        },
-
         xAxis: {
-            title: {
-                text: 'Vechicle'
-            },
-            categories: ['bike', 'motorbike', 'car', 'average']
+            categories: ['Bike', 'Motorbike', 'Car', 'Average']
         },
 
         yAxis: {
@@ -699,10 +713,15 @@ function charEISDeliveryTime(dataResult) {
 
         series: [{
             type: 'column',
-            colorByPoint: false,
+            colorByPoint: true,
             data: vehiclesTimeArray,
             showInLegend: false,
-            color: '#8e24aa'
+            colors: [
+                '#0d47a1',
+                '#c51162',
+                '#ff6f00',
+                '#212121'
+            ]
         }]
     });
 }
@@ -750,7 +769,7 @@ function charEISRevenue(dataResult) {
     total_sales = roundDecimals(total_sales);
     total_expenses = roundDecimals(total_expenses);
 
-    var total_array = [total_revenue, total_sales, total_expenses];
+    var total_array = [total_sales, total_expenses, total_revenue];
 
     $('#charEISRevenue').show();
 
@@ -765,7 +784,7 @@ function charEISRevenue(dataResult) {
         },
 
         xAxis: {
-            categories: ['Total revenue', 'Total sales', 'Total expenses']
+            categories: ['Total sales', 'Total expenses', 'Total revenue']
         },
 
         yAxis: {
@@ -777,10 +796,15 @@ function charEISRevenue(dataResult) {
 
         series: [{
             type: 'column',
-            colorByPoint: false,
+            colorByPoint: true,
             data: total_array,
             showInLegend: false,
-            color: '#004d40'
+            colors: [
+                '#0091ea',
+                '#3949ab',
+                '#00796b'
+
+            ]
         }]
     });
 
@@ -811,10 +835,14 @@ function charEISRevenue(dataResult) {
 
         series: [{
             type: 'column',
-            colorByPoint: false,
+            colorByPoint: true,
             data: total_vehicle_array,
             showInLegend: false,
-            color: '#ff6f00'
+            colors: [
+                '#1565c0',
+                '#f50057',
+                '#ff8f00',
+            ]
         }]
     });
 }
@@ -872,15 +900,17 @@ function charEISTotalDeliveriesZone(dataResult) {
         }
     });
 
-    var total_bike_with_array = [a_orders_with['bike'] + b_orders_with['bike'] + c_orders_with['bike']];
-    var total_moto_with_array = [a_orders_with['moto'] + b_orders_with['moto'] + c_orders_with['moto']];
-    var total_car_with_array = [a_orders_with['car'] + b_orders_with['car'] + c_orders_with['car']];
-    var total_v_with_array = [total_bike_with_array, total_moto_with_array, total_car_with_array];
+    var total_bike_with_array = a_orders_with['bike'] + b_orders_with['bike'] + c_orders_with['bike'];
+    var total_moto_with_array = a_orders_with['moto'] + b_orders_with['moto'] + c_orders_with['moto'];
+    var total_car_with_array = a_orders_with['car'] + b_orders_with['car'] + c_orders_with['car'];
+    var total_total_v_with_array = total_bike_with_array + total_moto_with_array + total_car_with_array;
+    var total_v_with_array = [total_bike_with_array, total_moto_with_array, total_car_with_array, total_total_v_with_array];
 
-    var total_bike_without_array = [a_orders_without['bike'] + b_orders_without['bike'] + c_orders_without['bike']];
-    var total_moto_without_array = [a_orders_without['moto'] + b_orders_without['moto'] + c_orders_without['moto']];
-    var total_car_without_array = [a_orders_without['car'] + b_orders_without['car'] + c_orders_without['car']];
-    var total_v_without_array = [total_bike_without_array, total_moto_without_array, total_car_without_array];
+    var total_bike_without_array = a_orders_without['bike'] + b_orders_without['bike'] + c_orders_without['bike'];
+    var total_moto_without_array = a_orders_without['moto'] + b_orders_without['moto'] + c_orders_without['moto'];
+    var total_car_without_array = a_orders_without['car'] + b_orders_without['car'] + c_orders_without['car'];
+    var total_total_v_without_array = total_bike_without_array + total_moto_without_array + total_car_without_array;
+    var total_v_without_array = [total_bike_without_array, total_moto_without_array, total_car_without_array, total_total_v_without_array];
 
     var total_bike_array = [(a_orders_with['bike'] + a_orders_without['bike']), (b_orders_with['bike'] + b_orders_without['bike']), (c_orders_with['bike'] + c_orders_without['bike'])];
     var total_moto_array = [(a_orders_with['moto'] + a_orders_without['moto']), (b_orders_with['moto'] + b_orders_without['moto']), (c_orders_with['moto'] + c_orders_without['moto'])];
@@ -902,16 +932,17 @@ function charEISTotalDeliveriesZone(dataResult) {
                            )
                            ];
 
-    var total_a_with_array = [a_orders_with['bike'] + a_orders_with['moto'] + a_orders_with['car']];
-    var total_b_with_array = [b_orders_with['bike'] + b_orders_with['moto'] + b_orders_with['car']];
-    var total_c_with_array = [c_orders_with['bike'] + c_orders_with['moto'] + c_orders_with['car']];
-    var total_with_array = [total_a_with_array, total_b_with_array, total_c_with_array];
+    var total_a_with_array = a_orders_with['bike'] + a_orders_with['moto'] + a_orders_with['car'];
+    var total_b_with_array = b_orders_with['bike'] + b_orders_with['moto'] + b_orders_with['car'];
+    var total_c_with_array = c_orders_with['bike'] + c_orders_with['moto'] + c_orders_with['car'];
+    var total_total_with_array = total_a_with_array + total_b_with_array + total_c_with_array;
+    var total_with_array = [total_a_with_array, total_b_with_array, total_c_with_array, total_total_with_array];
 
-    var total_a_without_array = [a_orders_without['bike'] + a_orders_without['moto'] + a_orders_without['car']];
-    var total_b_without_array = [b_orders_without['bike'] + b_orders_without['moto'] + b_orders_without['car']];
-    var total_c_without_array = [c_orders_without['bike'] + c_orders_without['moto'] + c_orders_without['car']];
-    var total_without_array = [total_a_without_array, total_b_without_array, total_c_without_array];
-
+    var total_a_without_array = a_orders_without['bike'] + a_orders_without['moto'] + a_orders_without['car'];
+    var total_b_without_array = b_orders_without['bike'] + b_orders_without['moto'] + b_orders_without['car'];
+    var total_c_without_array = c_orders_without['bike'] + c_orders_without['moto'] + c_orders_without['car'];
+    var total_total_without_array = total_a_without_array + total_b_without_array + total_c_without_array;
+    var total_without_array = [total_a_without_array, total_b_without_array, total_c_without_array, total_total_without_array];
 
     $('#charEISTotalDeliveriesZone').show();
 
@@ -929,7 +960,7 @@ function charEISTotalDeliveriesZone(dataResult) {
             title: {
                 text: 'Zone'
             },
-            categories: ['A', 'B', 'C']
+            categories: ['A', 'B', 'C', 'Total']
         },
         yAxis: {
             min: 0,
@@ -946,11 +977,17 @@ function charEISTotalDeliveriesZone(dataResult) {
                 stacking: 'percent'
             }
         },
+
+        colors: [
+            '#546e7a',
+            '#00bfa5'
+        ],
+
         series: [{
             name: 'With discount',
             data: total_with_array
         }, {
-            name: 'Without Discount',
+            name: 'Without discount',
             data: total_without_array
         }]
     });
@@ -968,23 +1005,29 @@ function charEISTotalDeliveriesZone(dataResult) {
             text: 'With and without discount'
         },
         xAxis: {
-            categories: ['Bike', 'Motorbike', 'Car']
+            categories: ['Bike', 'Motorbike', 'Car', 'Total']
         },
         yAxis: {
             min: 0,
             title: {
-                text: 'Percentaje quantity'
+                // text: 'Percentaje quantity'
+                text: 'Quantity'
             }
         },
         tooltip: {
-            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+            // pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f})<br/>',
             shared: true
         },
         plotOptions: {
-            column: {
-                stacking: 'percent'
-            }
+            // column: {
+            //     stacking: 'percent'
+            // }
         },
+        colors: [
+            '#546e7a',
+            '#00bfa5'
+        ],
         series: [{
             name: 'With discount',
             data: total_v_with_array
@@ -1060,12 +1103,16 @@ function charEISRevenueStatus(dataResult) {
     total_revenue = roundDecimals(total_revenue);
     operating_expenses = roundDecimals(operating_expenses);
 
+    operating_expenses = 6000;
+
     var gaugeOptions = {
         chart: {
             type: 'solidgauge'
         },
 
-        title: null,
+        title: {
+            text: "Revenue status"
+        },
 
         pane: {
             center: ['50%', '85%'],
@@ -1154,28 +1201,6 @@ function charEISRevenueStatus(dataResult) {
 
 }
 
-function getColorPattern(i) {
-    var colors = Highcharts.getOptions().colors,
-        patternColors = [colors[2], colors[0], colors[3], colors[1], colors[4]],
-        patterns = [
-            'M 0 0 L 5 5 M 4.5 -0.5 L 5.5 0.5 M -0.5 4.5 L 0.5 5.5',
-            'M 0 5 L 5 0 M -0.5 0.5 L 0.5 -0.5 M 4.5 5.5 L 5.5 4.5',
-            'M 1.5 0 L 1.5 5 M 4 0 L 4 5',
-            'M 0 1.5 L 5 1.5 M 0 4 L 5 4',
-            'M 0 1.5 L 2.5 1.5 L 2.5 0 M 2.5 5 L 2.5 3.5 L 5 3.5',
-            'M 1.5 0 L 2 5 M 4 0 L 0 5'
-        ];
-
-    return {
-        pattern: {
-            path: patterns[i],
-            color: patternColors[i],
-            width: 5,
-            height: 5
-        }
-    };
-}
-
 //*****************************************   CHARS DSS / INDEX   *****************************************
 
 function charDeliveryTime(dataResult) {
@@ -1235,7 +1260,13 @@ function charDeliveryTime(dataResult) {
             type: 'column',
             colorByPoint: true,
             data: vehiclesTimeArray,
-            showInLegend: false
+            showInLegend: false,
+            colors: [
+                '#1976d2',
+                '#ec407a',
+                '#fb8c00',
+                '#424242'
+            ]
         }]
     });
 }
@@ -1259,7 +1290,8 @@ function charRevenue(dataResult) {
     vehiclesRevenue['bike'] = vehiclesRevenue['bike'] / vehicles['bike'];
     vehiclesRevenue['moto'] = vehiclesRevenue['moto'] / vehicles['moto'];
     vehiclesRevenue['car'] = vehiclesRevenue['car'] / vehicles['car'];
-    averageRevenue = revenueTotal / vehiclesTotal;
+    averageRevenue = revenueTotal;
+    // averageRevenue = revenueTotal / vehiclesTotal;
 
     var vehiclesRevenueArray = [
         roundDecimals(vehiclesRevenue['bike']),
@@ -1280,15 +1312,12 @@ function charRevenue(dataResult) {
         },
 
         xAxis: {
-            title: {
-                text: 'Vechicle'
-            },
-            categories: ['bike', 'motorbike', 'car', 'average']
+            categories: ['Bike', 'Motorbike', 'Car', 'Total']
         },
 
         yAxis: {
             title: {
-                text: 'Cash'
+                text: "Revenue"
             },
             allowDecimals: true
         },
@@ -1297,7 +1326,13 @@ function charRevenue(dataResult) {
             type: 'column',
             colorByPoint: true,
             data: vehiclesRevenueArray,
-            showInLegend: false
+            showInLegend: false,
+            colors: [
+                '#0d47a1',
+                '#c51162',
+                '#ff6f00',
+                '#212121'
+            ]
         }]
     });
 }
@@ -1343,10 +1378,7 @@ function charQuantity(dataResult) {
         },
 
         xAxis: {
-            title: {
-                text: 'Vechicle'
-            },
-            categories: ['bike', 'motorbike', 'car', 'total']
+            categories: ['Bike', 'Motorbike', 'Car', 'Total']
         },
 
         yAxis: {
@@ -1356,13 +1388,17 @@ function charQuantity(dataResult) {
             allowDecimals: true
         },
 
-
-
         series: [{
             type: 'column',
             colorByPoint: true,
             data: vehiclesQuantityArray,
-            showInLegend: false
+            showInLegend: false,
+            colors: [
+                '#42a5f5',
+                '#ec407a',
+                '#ffa000',
+                '#37474f'
+            ]
         }]
     });
 }
@@ -1422,7 +1458,7 @@ function charTotalRevenue(operating_expenses, total_revenue) {
                 dataLabels: {
                     y: 5,
                     borderWidth: 0,
-                    useHTML: true
+                    useHTML: false
                 }
             }
         }
@@ -1464,56 +1500,3 @@ function charTotalRevenue(operating_expenses, total_revenue) {
 function roundDecimals(number) {
     return (Math.round((number + Number.EPSILON) * 100) / 100)
 }
-
-/**
- *
- * @param dataR
- */
-// function fCharIndex(dataR) {
-//     var datac = dataR.data
-//     var categories = dataR.categories
-//
-//     var arrayData = datac.split(",");
-//     var arrayCategories = categories.split(",");
-//
-//     arrayDataN = arrayData.map(function (x) {
-//         return parseFloat(x, 10);
-//     });
-//
-//     $('#charIndex').show();
-//
-//     var chart = Highcharts.chart('containerIndex', {
-//         title: {
-//             text: 'Total de órdenes'
-//         },
-//
-//         subtitle: {
-//             text: 'sub'
-//         },
-//
-//         xAxis: {
-//             title: {
-//                 text: 'Orden'
-//             },
-//             categories: arrayCategories
-//             // categories: [categories]
-//             // categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-//         },
-//
-//         yAxis: {
-//             title: {
-//                 text: 'Total $'
-//             },
-//             allowDecimals: true
-//         },
-//
-//         series: [{
-//             type: 'column',
-//             colorByPoint: true,
-//             data: arrayDataN,
-//             // data: [data],
-//             // data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
-//             showInLegend: false
-//         }]
-//     });
-// }
