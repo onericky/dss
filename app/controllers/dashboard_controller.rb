@@ -134,7 +134,7 @@ class DashboardController < ApplicationController
           discount = 1 - (@var_x[:x2].to_f / 100)
 
           order_type_time = getOrderTypeTime(@zone_and_order_type[:orderType])
-          vehicle_time = getVehicleTime('car')
+          vehicle_time = getVehicleTime(vehicle)
           traffic = getTrafficTime(@var_z[:z2].to_i)
           zone_time = getZoneTime(@zone_and_order_type[:zone])
           weather_time = getWeatherTime(@var_z[:z3])
@@ -457,7 +457,7 @@ class DashboardController < ApplicationController
     when 'moto'
       return 0.20
     when 'car'
-      return 0.35
+      return 0.30
     end
   end
 
@@ -473,22 +473,33 @@ class DashboardController < ApplicationController
   def getTrafficTime(z2)
     case z2
     when 1
-      return 0.2
+      return 0.1
     when 2
-      return 1
+      return 0.5
     when 3
       return 2
+    end
+  end
+
+  def getVehicleTimeBase(vehicle)
+    case vehicle
+    when 'bike'
+      return 4
+    when 'moto'
+      return 7
+    when 'car'
+      return 6
     end
   end
 
   def getVehicleTime(vechile)
     case vechile
     when 'bike'
-      return 1.5
+      return 2.5
     when 'moto'
-      return 0.5
+      return 1
     when 'car'
-      return 0.10
+      return 0.6
     end
   end
 

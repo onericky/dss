@@ -390,7 +390,8 @@ function charEISDeliveryTime(dataResult) {
 }
 
 function charEISRevenue(dataResult) {
-    var bike_revenue = moto_revenue = car_revenue = total_revenue = total_sales = total_expenses = v = 0;
+    var bike_revenue = moto_revenue = car_revenue = total_revenue = total_sales = total_expenses = 0;
+    var v = tb = tm = tc = 0;
 
     total_expenses = dataResult[0]['expenses'][0]['total_expenses'];
 
@@ -400,6 +401,7 @@ function charEISRevenue(dataResult) {
             total_sales += data['total_sales'];
             if(data['total_revenue_bike'] > 0) {
                 v ++;
+                tb ++;
             }
 
             bike_revenue += data['total_revenue_bike'];
@@ -408,6 +410,7 @@ function charEISRevenue(dataResult) {
             total_sales += data['total_sales'];
             if(data['total_revenue_moto'] > 0) {
                 v ++;
+                tm ++;
             }
 
             moto_revenue += data['total_revenue_moto'];
@@ -416,17 +419,19 @@ function charEISRevenue(dataResult) {
             total_sales += data['total_sales'];
             if(data['total_revenue_car'] > 0) {
                 v ++;
+                tc ++;
             }
 
             car_revenue += data['total_revenue_car'];
         }
     });
 
+
     vehicle_total_revenue = ((bike_revenue + moto_revenue + car_revenue) / v);
 
-    bike_revenue = roundDecimals(bike_revenue);
-    moto_revenue = roundDecimals(moto_revenue);
-    car_revenue = roundDecimals(car_revenue);
+    bike_revenue = roundDecimals(bike_revenue / tb);
+    moto_revenue = roundDecimals(moto_revenue / tm);
+    car_revenue = roundDecimals(car_revenue / tc);
     vehicle_total_revenue = roundDecimals(vehicle_total_revenue);
     total_revenue = roundDecimals(total_revenue);
     total_sales = roundDecimals(total_sales);
@@ -907,7 +912,7 @@ function charDeliveryTime(dataResult) {
             title: {
                 text: 'Vechicle'
             },
-            categories: ['bike', 'motorbike', 'car', 'average']
+            categories: ['Bike', 'Motorbike', 'Car', 'Average']
         },
 
         yAxis: {
@@ -951,8 +956,8 @@ function charRevenue(dataResult) {
     vehiclesRevenue['bike'] = vehiclesRevenue['bike'] / vehicles['bike'];
     vehiclesRevenue['moto'] = vehiclesRevenue['moto'] / vehicles['moto'];
     vehiclesRevenue['car'] = vehiclesRevenue['car'] / vehicles['car'];
-    averageRevenue = revenueTotal;
-    // averageRevenue = revenueTotal / vehiclesTotal;
+    // averageRevenue = revenueTotal;
+    averageRevenue = revenueTotal / vehiclesTotal;
 
     var vehiclesRevenueArray = [
         roundDecimals(vehiclesRevenue['bike']),
@@ -973,7 +978,7 @@ function charRevenue(dataResult) {
         },
 
         xAxis: {
-            categories: ['Bike', 'Motorbike', 'Car', 'Total']
+            categories: ['Bike', 'Motorbike', 'Car', 'Average']
         },
 
         yAxis: {
@@ -1097,9 +1102,9 @@ function charTotalRevenue(operating_expenses, total_revenue) {
         // the value axis
         yAxis: {
             stops: [
-                [0.98, '#DF5353'], // red
+                [0.99, '#DF5353'], // red
                 // [0.5, '#DDDF0D'], // yellow
-                [0.99, '#f69c49'], // orange
+                // [0.99, '#f69c49'], // orange
                 [1, '#55BF3B'],   // green
             ],
             lineWidth: 0,
@@ -1128,6 +1133,10 @@ function charTotalRevenue(operating_expenses, total_revenue) {
     $('#charIndexTotalRevenue').show();
 
     var chartSpeed = Highcharts.chart('containerIndexTotalRevenue', Highcharts.merge(gaugeOptions, {
+        title: {
+            text: "Revenue status"
+        },
+
         yAxis: {
             min: 0,
             max: operating_expenses,
